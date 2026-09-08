@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ReturnCount:LicenseVerifier.kt:LicenseVerifier$fun verify: LicenseClaims?</ID>
+    <ID>ReturnCount:LicenseVerifier.kt:LicenseVerifier$private fun parseClaims: LicenseClaims?</ID>
+  </CurrentIssues>
+</SmellBaseline>

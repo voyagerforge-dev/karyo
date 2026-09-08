@@ -1,0 +1,8 @@
+<html><head><style>{|body{font-family:sans-serif;font-size:12px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:4px;text-align:left}h2{margin-bottom:4px}td:first-child{white-space:nowrap}|}</style></head>
+<body>
+<h2>PACKET LIST</h2>
+<p>Shipment: {shipmentNumber} &#160; Order: {orderNumber} &#160; State: {stateLabel} &#160; Generated: {generatedAt}</p>
+<table><thead><tr><th>Unit #</th><th>Type</th><th>Weight</th><th>Tracking</th><th>Lines</th><th>Total Qty</th><th>Orders</th></tr></thead><tbody>
+{#for unit in units}<tr><td>{unit.shippingUnitNumber}</td><td>{unit.type}</td><td>{unit.weight}</td><td>{unit.tracking}</td><td>{unit.lineCount}</td><td>{unit.totalQty}</td><td>{unit.orders}</td></tr>{/for}
+</tbody></table>
+</body></html>

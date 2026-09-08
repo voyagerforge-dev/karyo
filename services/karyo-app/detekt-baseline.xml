@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>LargeClass:ReceivingFlowTest.kt:ReceivingFlowTest</ID>
+    <ID>MaxLineLength:DemoEverythingAliveIT.kt:DemoEverythingAliveIT$assertTrue(q("SELECT count(*) FROM karyo.delivery_orders WHERE client_id=1 AND state&gt;0 AND state&lt;700 AND modified &lt; NOW() - INTERVAL '24 hours'") &gt;= 1)</ID>
+    <ID>MaxLineLength:InventoryGeneratorIT.kt:InventoryGeneratorIT$val emptyBins = em.createNativeQuery("SELECT count(*) FROM karyo.storage_locations WHERE client_id=1 AND allocation = 0").singleResult as Number</ID>
+    <ID>MaxLineLength:InventoryGeneratorIT.kt:InventoryGeneratorIT$val expiring = em.createNativeQuery("SELECT count(*) FROM karyo.stock_units WHERE client_id=1 AND best_before IS NOT NULL AND best_before &lt;= (CURRENT_DATE + 7)").singleResult as Number</ID>
+    <ID>MaxLineLength:InventoryGeneratorIT.kt:InventoryGeneratorIT$val fix = em.createNativeQuery("SELECT count(*) FROM karyo.fix_assignments WHERE client_id=1 AND min_amount IS NOT NULL").singleResult as Number</ID>
+    <ID>MaxLineLength:InventoryGeneratorIT.kt:InventoryGeneratorIT$val occupied = em.createNativeQuery("SELECT count(*) FROM karyo.storage_locations WHERE client_id=1 AND allocation &gt;= 100").singleResult as Number</ID>
+    <ID>MaxLineLength:KpiViewRepositoryTest.kt:KpiViewRepositoryTest$"INSERT INTO karyo.count_lines (client_id, count_order_id, stock_unit_id, item_data_id, item_data_number, planned_amount, counted_amount, state, created) "</ID>
+    <ID>MaxLineLength:LocationEmptyTest.kt:LocationEmptyTest$fun</ID>
+    <ID>UnusedParameter:PickCancelServiceTest.kt:PickCancelServiceTest$orderAmount: Double</ID>
+    <ID>UnusedParameter:StubReceiverResource.kt:StubReceiverResource$body: String</ID>
+  </CurrentIssues>
+</SmellBaseline>

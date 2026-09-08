@@ -1,0 +1,79 @@
+complexity:
+  LongMethod:
+    allowedLines: 70
+  LongParameterList:
+    # 2026-08-17 (defect-burndown-5, Task 10, row :1428) -- CLOSED BY ADJUDICATION, config is
+    # correct-as-is. The row's original premise (a 2.0-alpha config-key rename) is FALSE: these
+    # two keys (allowedFunctionParameters/allowedConstructorParameters) are the current names,
+    # confirmed by decompiling the resolved detekt-core-2.0.0-alpha.2.jar's bundled
+    # default-detekt-config.yml, which carries them with defaults 5/6 under ruleset id
+    # "complexity", active: true. The rule is inert repo-wide for an unrelated, unfixable-here
+    # reason: dev.detekt.rules.complexity.LongParameterList (decompiled class signature)
+    # `implements dev.detekt.api.RequiresAnalysisApi`, a marker interface that gates a rule
+    # behind Kotlin's Analysis API (type resolution). The whole-module `detekt` Gradle task --
+    # the one this repo's root build.gradle.kts wires, CI (`./gradlew detekt`) invokes, and the
+    # documented findings baseline was built against -- never performs type resolution, so every
+    # RequiresAnalysisApi rule is silently disabled on it. Proven empirically: running
+    # `:services:order-service:karyo-orders-core:detekt` (OrderService, 14 ctor params vs the
+    # ceiling of 10) with this yml AND with a bisected default-config-only run produced the
+    # IDENTICAL 73-enabled/154-disabled rule split (SARIF `defaultConfiguration.enabled: false`
+    # for LongParameterList in both), so this is not a config merge bug -- it is unconditional on
+    # this task, regardless of yml content. Running the sourceSet-scoped `detektMain` task
+    # instead (the only task in this plugin that supplies a compile classpath, i.e. type
+    # resolution) does make LongParameterList fire -- confirmed for OrderService's 14-param
+    # constructor -- but simultaneously un-inerts 91 other RequiresAnalysisApi rule classes
+    # (92 of 267 decompiled rule classes implement the marker) repo-wide, surfacing 61 additional
+    # findings in that ONE 44-file module alone (UnsafeCallOnNullableType, UseOrEmpty, etc.),
+    # against a previous whole-repo total of 24 findings across 10 modules. Switching the
+    # canonical task (or injecting a classpath into the existing `detekt` task to the same
+    # effect) is out of this row's scope: it would require suppressing ~90 newly-eligible rules
+    # via config to avoid an uncontrolled, unscoped finding explosion -- a refactor/config sprint
+    # of its own, not a diagnosis-and-baseline fix. Left as-is: allowedConstructorParameters
+    # stays 10 (NOT raised), no @Suppress added, no baseline.xml created (there is nothing for it
+    # to pin -- the rule produces zero results under the canonical task with any config). The six
+    # classes over this ceiling as of this date (re-verified, ceiling 10): PickOrderService 20
+    # (grew from 19 during this sprint), OrderService 14, LocationFinderService 13,
+    # PackingService 12, UnitLoadService 11, GoodsReceiptService 11 -- tracked in
+    # docs/WORKLIST.md row :1428 as closed-by-adjudication, not silently dropped. Revisit only as
+    # a deliberate follow-up (post-alpha detekt upgrade, or an explicit type-resolution CI lane
+    # with its own scoped rule allowlist), never by raising this ceiling.
+    allowedFunctionParameters: 8
+    allowedConstructorParameters: 10
+  CyclomaticComplexMethod:
+    allowedComplexity: 15
+  TooManyFunctions:
+    allowedFunctionsPerFile: 25
+    allowedFunctionsPerClass: 25
+    # Introduced 2026-08-15 (defect-burndown-4) to align the interface budget with the existing
+    # 25-function class/file budgets when LocationLockPort reached detekt's built-in interface
+    # ceiling. LocationLockPort is a documented growing location-facts seam; consider a port
+    # split at its next growth instead of another bump.
+    allowedFunctionsPerInterface: 25
+  ComplexCondition:
+    allowedConditions: 4
+
+naming:
+  FunctionNaming:
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+  VariableNaming:
+    variablePattern: '[a-z][a-zA-Z0-9]*'
+
+style:
+  MaxLineLength:
+    maxLineLength: 150
+  WildcardImport:
+    active: false
+  MagicNumber:
+    active: false
+  ReturnCount:
+    max: 5
+  LoopWithTooManyJumpStatements:
+    maxJumpCount: 3
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+
+potential-bugs:
+  UnsafeCast:
+    active: true

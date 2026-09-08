@@ -1,0 +1,2 @@
+ALTER TABLE order_strategies
+    ADD COLUMN IF NOT EXISTS packout_strategy VARCHAR(60) NOT NULL DEFAULT 'ONE_TO_ONE';

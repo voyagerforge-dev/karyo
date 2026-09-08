@@ -1,0 +1,55 @@
+# Standalone dev infrastructure — use when NOT running via Quarkus Dev Services.
+# Usage: docker compose -f infrastructure/docker/docker-compose.dev.yml up -d
+#
+# Then run the modular monolith with Dev Services disabled:
+#   ./gradlew :services:karyo-app:quarkusDev \
+#     -Dquarkus.devservices.enabled=false
+#
+# Note: Kafka was removed from the runtime in the 2026-06 modular-monolith
+# pivot — internal events are synchronous CDI; the outbox table is dormant.
+
+name: karyo-dev-stack
+services:
+  postgresql:
+    image: docker.io/postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: quarkus
+      POSTGRES_PASSWORD: quarkus
+      POSTGRES_DB: karyo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-dev-db.sh:/docker-entrypoint-initdb.d/init-dev-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quarkus"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    ports:
+      - "8180:8080"
+    environment:
+      JAVA_OPTS_APPEND: -Dkeycloak.import.replace-placeholders=true
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    command: start-dev --import-realm
+    volumes:
+      - ../keycloak/karyo-realm.json:/opt/keycloak/data/import/karyo-realm.json:ro,z
+
+  pact-broker:
+    image: pactfoundation/pact-broker:latest
+    ports:
+      - "9292:9292"
+    environment:
+      PACT_BROKER_DATABASE_URL: "postgres://pact_broker:pact_broker@postgresql:5432/pact_broker"
+      PACT_BROKER_LOG_LEVEL: INFO
+      PACT_BROKER_SQL_LOG_LEVEL: none
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
+volumes:
+  pgdata:

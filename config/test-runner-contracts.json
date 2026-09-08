@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "contracts": [
+    {
+      "runner": "gradle",
+      "kind": "source-tree",
+      "prefixes": [
+        "buildSrc/",
+        "libs/",
+        "services/"
+      ],
+      "path_segment": "/src/test/",
+      "task_name": "test",
+      "require_unfiltered": true,
+      "require_junit_platform": true
+    },
+    {
+      "runner": "playwright",
+      "kind": "playwright",
+      "prefixes": [
+        "tests/e2e/tests/"
+      ],
+      "suffixes": [
+        ".spec.ts"
+      ],
+      "exact": [],
+      "project_root": "tests/e2e",
+      "test_dir": "tests",
+      "test_match": "**/*.spec.ts",
+      "forbid_skips": true,
+      "skip_reporter": "./fixtures/no-skipped-tests-reporter.ts",
+      "forbid_only": true
+    },
+    {
+      "runner": "vitest-mobile",
+      "kind": "vitest",
+      "prefixes": [
+        "frontend/mobile/"
+      ],
+      "suffixes": [
+        ".spec.cjs",
+        ".spec.cjsx",
+        ".spec.cts",
+        ".spec.ctsx",
+        ".spec.js",
+        ".spec.jsx",
+        ".spec.mjs",
+        ".spec.mjsx",
+        ".spec.mts",
+        ".spec.mtsx",
+        ".spec.ts",
+        ".spec.tsx",
+        ".test.cjs",
+        ".test.cjsx",
+        ".test.cts",
+        ".test.ctsx",
+        ".test.js",
+        ".test.jsx",
+        ".test.mjs",
+        ".test.mjsx",
+        ".test.mts",
+        ".test.mtsx",
+        ".test.ts",
+        ".test.tsx"
+      ],
+      "exact": [
+        "frontend/mobile/src/test/setup.ts"
+      ],
+      "excluded_path_parts": [
+        ".git",
+        "node_modules"
+      ],
+      "project_root": "frontend/mobile",
+      "include": [
+        "**/*.{test,spec}.?(c|m)[jt]s?(x)"
+      ],
+      "exclude": [
+        "**/.git/**",
+        "**/node_modules/**"
+      ],
+      "setup_files": [
+        "src/test/setup.ts"
+      ]
+    },
+    {
+      "runner": "vitest-web",
+      "kind": "vitest",
+      "prefixes": [
+        "frontend/web/"
+      ],
+      "suffixes": [
+        ".spec.cjs",
+        ".spec.cjsx",
+        ".spec.cts",
+        ".spec.ctsx",
+        ".spec.js",
+        ".spec.jsx",
+        ".spec.mjs",
+        ".spec.mjsx",
+        ".spec.mts",
+        ".spec.mtsx",
+        ".spec.ts",
+        ".spec.tsx",
+        ".test.cjs",
+        ".test.cjsx",
+        ".test.cts",
+        ".test.ctsx",
+        ".test.js",
+        ".test.jsx",
+        ".test.mjs",
+        ".test.mjsx",
+        ".test.mts",
+        ".test.mtsx",
+        ".test.ts",
+        ".test.tsx"
+      ],
+      "exact": [
+        "frontend/web/src/test/setup.ts"
+      ],
+      "excluded_path_parts": [
+        ".git",
+        "node_modules"
+      ],
+      "project_root": "frontend/web",
+      "include": [
+        "**/*.{test,spec}.?(c|m)[jt]s?(x)"
+      ],
+      "exclude": [
+        "**/.git/**",
+        "**/node_modules/**"
+      ],
+      "setup_files": [
+        "src/test/setup.ts"
+      ]
+    }
+  ],
+  "operational_sources": [
+    {
+      "path": "libs/karyo-license/src/operationalTest/kotlin/com/karyo/license/LicenseMintOperationalTest.kt",
+      "runner": "gradle-operational",
+      "reason": "Controller-only license re-mint utility requiring the vendor private key."
+    },
+    {
+      "path": "tests/e2e/operational/copilot-live.operational.ts",
+      "runner": "playwright-operational",
+      "reason": "Live-provider copilot check requiring Anthropic or Ollama."
+    },
+    {
+      "path": "tests/e2e/operational/database-cleanup.operational.ts",
+      "runner": "playwright-operational",
+      "reason": "Destructive artifact-sweep regression requiring an explicitly verified disposable PostgreSQL container and its local container CLI."
+    },
+    {
+      "path": "tests/e2e/operational/inventory-extension.operational.ts",
+      "runner": "playwright-operational",
+      "reason": "Build-time augmentation proof against the deliberately installed inventory example, plus a stock-image negative control."
+    },
+    {
+      "path": "tests/e2e/operational/webhooks-delivery.operational.ts",
+      "runner": "playwright-operational",
+      "reason": "Outbound webhook delivery check requiring a container-reachable receiver."
+    }
+  ],
+  "playwright_operational": {
+    "project_root": "tests/e2e",
+    "test_dir": "operational",
+    "test_match": "**/*.operational.ts"
+  }
+}

@@ -1,0 +1,11 @@
+<html><head><style>{|body{font-family:sans-serif;font-size:12px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:4px;text-align:left}|}</style></head>
+<body>
+<h2>BILL OF LADING</h2>
+<p>Date: {date} Shipment: {shipmentNumber} Orders: {orderNumber}</p>
+<table><tr><td><b>Ship From</b><br/>{shipFrom.name}<br/>{shipFrom.street}<br/>{shipFrom.city} {shipFrom.zipCode} {shipFrom.country}</td>
+<td><b>Ship To</b><br/>{shipTo.customerName}<br/>{shipTo.street} {shipTo.streetNumber}<br/>{shipTo.city} {shipTo.zipCode} {shipTo.country}</td></tr></table>
+<p>Carrier: {carrierName} {carrierService} Tracking: {trackingNumber} Total weight: {totalWeight}</p>
+<table><thead><tr><th>Item</th><th>Qty</th></tr></thead><tbody>
+{#for line in lines}<tr><td>{line.sku}</td><td>{line.qty}</td></tr>{/for}
+</tbody></table>
+</body></html>

@@ -1,0 +1,130 @@
+name: karyo-prod
+
+services:
+
+  # --- Infrastructure ---
+
+  postgresql:
+    image: docker.io/postgres:16-alpine
+    env_file: ../../scripts/.env.prod.postgresql
+    # The deploy script renders only POSTGRES_* values into this private service file.
+    volumes:
+      - karyo-pgdata:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro,z
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      # start_period is what makes --reset-db work on a slow box. On a fresh volume the
+      # entrypoint runs initdb, which starts and stops postgres locally before the real
+      # server comes up -- so pg_isready flaps for ~35s. Without a start_period those
+      # failures count against `retries` (10 x 5s = 50s), the dependency check gives up,
+      # and compose leaves keycloak in `Created` while postgres goes healthy moments later.
+      # Failures during start_period do not count.
+      start_period: 90s
+    networks:
+      - karyo-net
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: start --import-realm
+    env_file: ../../scripts/.env.prod.keycloak
+    environment:
+      JAVA_OPTS_APPEND: -Dkeycloak.import.replace-placeholders=true
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_PROXY_HEADERS: xforwarded
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      # KC_HOSTNAME comes from the Keycloak-specific rendered environment file.
+      # KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true makes internal (service-to-service) OIDC
+      # discovery return URLs using the request hostname (keycloak:8080), while browser
+      # requests still use KC_HOSTNAME (the external IP/domain)
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgresql:5432/keycloak
+      KC_HEALTH_ENABLED: "true"
+      KC_HTTP_MANAGEMENT_PORT: "9000"
+      # Bootstrap and Keycloak database credentials stay in this container. Realm import
+      # also receives only the OIDC and karyo-admin secrets needed to bind its clients.
+    volumes:
+      - ../../infrastructure/keycloak/karyo-realm-prod.json:/opt/keycloak/data/import/karyo-realm.json:ro,z
+      # Karyo-branded login theme (Control design system) — realm loginTheme=karyo
+      - ../../infrastructure/keycloak/themes:/opt/keycloak/themes:ro,z
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/9000"]
+      interval: 15s
+      timeout: 10s
+      retries: 30
+      # Same cold-volume reasoning as postgres above: on a fresh DB Keycloak runs Liquibase
+      # to build its schema and imports the realm before the management port opens, so early
+      # checks fail for minutes. Failures during start_period do not count toward retries.
+      start_period: 240s
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    networks:
+      - karyo-net
+    restart: unless-stopped
+
+  # --- Application (modular monolith) ---
+
+  karyo-app:
+    # image: matches the tag deploy-server.sh builds (karyo/karyo-app) so `compose up`
+    # runs the freshly-built image instead of a stale project-named (karyo-prod_*) one.
+    image: ${KARYO_APP_IMAGE:-karyo/karyo-app:latest}
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile.service
+      args:
+        SERVICE_DIR: services/karyo-app
+    env_file: ../../scripts/.env.prod.app
+    environment:
+      QUARKUS_PROFILE: prod
+    # APP_MEM_LIMIT is exported by deploy-server.sh from scripts/.env.prod (if set)
+    mem_limit: ${APP_MEM_LIMIT:-1536m}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/q/health/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    networks:
+      - karyo-net
+    restart: unless-stopped
+
+  nginx:
+    # image: matches the tag deploy-server.sh builds (karyo/nginx) so `compose up`
+    # runs the freshly-built image instead of a stale project-named (karyo-prod_*) one.
+    image: ${KARYO_NGINX_IMAGE:-karyo/nginx:latest}
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile.nginx
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+    env_file: ../../scripts/.env.prod.nginx
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      karyo-app:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    networks:
+      - karyo-net
+    restart: unless-stopped
+
+volumes:
+  karyo-pgdata:
+
+networks:
+  karyo-net:
+    driver: bridge

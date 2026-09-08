@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>MaxLineLength:WarehouseInsightTools.kt:WarehouseInsightTools$@Tool("List replenishment needs — fixed-location assignments below minimum stock. Shows location, item, current vs min amount and whether a task is already open.")</ID>
+    <ID>MaxLineLength:WarehouseInsightTools.kt:WarehouseInsightTools$@Tool("List storage locations. Optionally filter by zone name (case-insensitive). Returns up to 50 locations with name, zone, lock state and allocation.")</ID>
+    <ID>SwallowedException:CopilotResource.kt:CopilotResource$e: CopilotDisabledException</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,0 +1,1 @@
+ALTER TABLE asns ADD COLUMN supplier_name VARCHAR(255);

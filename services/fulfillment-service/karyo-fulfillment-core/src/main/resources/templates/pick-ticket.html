@@ -1,0 +1,9 @@
+<html><head><style>{|body{font-family:sans-serif;font-size:12px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:4px;text-align:left}|}</style></head>
+<body>
+<h2>PICK TICKET</h2>
+<p>Pick Order: {pickOrder.pickOrderNumber} &#160; Delivery Order: {pickOrder.deliveryOrderNumber} &#160; Prio: {pickOrder.prio} &#160; Operator: {pickOrder.operatorId} &#160; State: {pickOrder.state}</p>
+<p>Generated: {generatedAt}</p>
+<table><thead><tr><th>#</th><th>SKU</th><th>Lot</th><th>Planned Qty</th><th>Source Location</th><th>Source UL</th><th>Confirm</th></tr></thead><tbody>
+{#for pick in picks}<tr><td>{pick.seq}</td><td>{pick.itemDataNumber}</td><td>{pick.lotNumber ?: '—'}</td><td>{pick.plannedAmount}</td><td>{pick.sourceLocation}</td><td>{pick.sourceUnitLoad}</td><td>☐</td></tr>{/for}
+</tbody></table>
+</body></html>

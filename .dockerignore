@@ -1,0 +1,21 @@
+**/node_modules
+**/dist
+**/.venv
+.git
+mywms
+# ^ defensive: GPL reference source removed 2026-08-02; entry kept so an accidental reappearance never enters an image build context
+docs
+
+# Local-only operator files. No Dockerfile COPYs any of them and none may enter a build context.
+# This is the ONLY ignore file that applies to every image built here, because Docker and Podman
+# read `.dockerignore` from the CONTEXT ROOT and every image in this repository is built with the
+# repository root as its context - a per-directory one beside a Dockerfile is simply not consulted.
+# A test builds the real context and asserts these paths did not arrive in it.
+#
+# Do NOT add `**/build` here: `infrastructure/docker/Dockerfile.service` copies
+# `services/karyo-app/build/quarkus-app/` out of this same context.
+scripts/.env.prod*
+scripts/.license-signing-key
+distribution/.env
+distribution/config
+distribution/catalog.json

@@ -1,0 +1,343 @@
+quarkus:
+  application:
+    name: karyo
+
+  # Human-readable dev/test output; production enables the assembled JSON extension below.
+  log:
+    console:
+      json:
+        enabled: false
+
+  # Single datasource for the modular monolith (URL via Dev Services in dev/test; prod profile sets it)
+  datasource:
+    db-kind: postgresql
+    jdbc:
+      max-size: 20
+
+  # Single default Hibernate ORM persistence unit, one schema for all modules
+  hibernate-orm:
+    # JSON columns hold raw JSON strings or List<String>, not REST DTOs. Keep their
+    # format independent of Kotlin/Patchable REST customizers (Quarkus 3.26+).
+    # DatabaseJsonCompatibilityTest exercises legacy reads and JSONB writes.
+    mapping:
+      format:
+        global: ignore
+    database:
+      default-schema: karyo
+    log:
+      sql: false
+
+  # Flyway — one migrator over all module location sets; versions are globally unique
+  flyway:
+    migrate-at-start: true
+    schemas: karyo
+    default-schema: karyo
+    create-schemas: true
+    # Per-module migrations interleave numerically (e.g. layout V308 ships after
+    # orders V4xx were already applied to a long-lived DB), so allow out-of-order
+    # application. Each module's version range stays internally ordered.
+    out-of-order: true
+    locations: db/migration/common,db/migration/inventory,db/migration/product,db/migration/layout,db/migration/orders,db/migration/tasks,db/migration/fulfillment,db/migration/stocktaking,db/migration/work,db/migration/webhooks,db/migration/reporting,db/migration/monitors,db/migration/auth,db/migration/docstore,db/migration/crossdock,db/migration/wave,db/migration/streaming
+
+  # OIDC (identical across all source services)
+  oidc:
+    auth-server-url: ${OIDC_URL:http://localhost:8180/realms/karyo}
+    client-id: karyo-backend
+    credentials:
+      secret: ${OIDC_SECRET:dev-backend-secret}
+
+  # Keycloak Admin Client (from auth-service)
+  keycloak:
+    admin-client:
+      server-url: ${KEYCLOAK_URL:http://localhost:8180}
+      realm: karyo
+      client-id: karyo-admin
+      client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET:dev-admin-client-secret}
+      grant-type: CLIENT_CREDENTIALS
+
+  # Caffeine L1 caching — union of all module cache names
+  cache:
+    caffeine:
+      # inventory
+      "unit-load-types":
+        expire-after-write: 60M
+        maximum-size: 100
+      # product
+      "products-by-id":
+        expire-after-write: 60M
+        maximum-size: 500
+      "products-by-number":
+        expire-after-write: 60M
+        maximum-size: 500
+      "products-by-barcode":
+        expire-after-write: 60M
+        maximum-size: 1000
+      "item-units":
+        expire-after-write: 60M
+        maximum-size: 50
+      # layout
+      "locations-by-id":
+        expire-after-write: 30M
+        maximum-size: 500
+      "locations-by-scan-code":
+        expire-after-write: 30M
+        maximum-size: 500
+      "zones":
+        expire-after-write: 60M
+        maximum-size: 50
+      "areas":
+        expire-after-write: 60M
+        maximum-size: 50
+      "location-types":
+        expire-after-write: 60M
+        maximum-size: 20
+      "clusters":
+        expire-after-write: 60M
+        maximum-size: 50
+      "storage-strategies":
+        expire-after-write: 60M
+        maximum-size: 50
+      "storage-areas":
+        expire-after-write: 60M
+        maximum-size: 50
+
+  # LangChain4j — dual named models (both built into image; runtime selection via karyo.ai.provider)
+  langchain4j:
+    # Named model "claude" → provider anthropic (build-time fixed)
+    claude:
+      chat-model:
+        provider: anthropic
+    anthropic:
+      claude:
+        # quarkus-langchain4j validates this property EAGERLY at startup (even when
+        # karyo.ai.provider=none and the model is never called). An empty string is
+        # rejected by smallrye-config as a missing required value (SRCFG00040) and the
+        # app fails to boot. A non-empty placeholder keeps boot green when no real key
+        # is set; it is only ever USED when KARYO_AI_PROVIDER=anthropic.
+        api-key: ${ANTHROPIC_API_KEY:disabled-set-KARYO_AI_PROVIDER-and-ANTHROPIC_API_KEY}
+        chat-model:
+          model-name: ${KARYO_AI_ANTHROPIC_MODEL:claude-opus-4-20250514}
+    # Named model "local" → provider ollama (build-time fixed)
+    local:
+      chat-model:
+        provider: ollama
+    ollama:
+      local:
+        base-url: ${OLLAMA_URL:http://localhost:11434}
+        chat-model:
+          model-id: ${KARYO_AI_OLLAMA_MODEL:llama3.1}
+
+  # Container image
+  container-image:
+    group: karyo
+    name: karyo
+
+  # Mailer (SC20 email alert channel). mock defaults ON — no real mail leaves the box
+  # until SMTP is explicitly configured (KARYO_SMTP_MOCK=false). Non-empty defaults
+  # everywhere per the SRCFG00040 boot-trap rule.
+  mailer:
+    from: ${KARYO_MAIL_FROM:karyo@localhost}
+    host: ${KARYO_SMTP_HOST:localhost}
+    port: ${KARYO_SMTP_PORT:587}
+    username: ${KARYO_SMTP_USERNAME:none}
+    password: ${KARYO_SMTP_PASSWORD:none}
+    mock: ${KARYO_SMTP_MOCK:true}
+
+  # Health
+  smallrye-health:
+    root-path: /q/health
+
+  # OpenTelemetry
+  otel:
+    exporter:
+      otlp:
+        endpoint: ${OTEL_ENDPOINT:http://localhost:4317}
+
+# --- Karyo application config (discoverable/overridable by operators) ---
+karyo:
+  ai:
+    provider: ${KARYO_AI_PROVIDER:none}   # anthropic | ollama | none
+  print:
+    # Single-printer-per-instance raw ZPL push (LabelPrintService, TCP :9100). "none" is a
+    # non-empty placeholder (SRCFG00040 boot-trap rule) meaning no printer configured.
+    url: ${KARYO_PRINT_URL:none}
+  license:
+    # comma-separated paid module keys, e.g. "monitors". "none" is a non-empty placeholder —
+    # smallrye-config treats an empty-string resolved value as "missing" (SRCFG00040) and fails
+    # the whole app's boot once any bean actually injects LicenseService (see MonitorEvaluator).
+    # LicenseService filters the "none" sentinel back out, so the default entitlement set stays empty.
+    entitlements: ${KARYO_LICENSE:none}
+  monitors:
+    interval: ${KARYO_MONITORS_INTERVAL:5m}
+    # SC20 alert-delivery relay tick (email/slack rows -> AlertDeliveryScheduler)
+    delivery-interval: ${KARYO_MONITORS_DELIVERY_INTERVAL:30s}
+  forecasting:
+    lead-time-days: ${KARYO_FORECAST_LEAD_TIME:7}
+    service-level: ${KARYO_FORECAST_SERVICE_LEVEL:0.95}
+    history-days: ${KARYO_FORECAST_HISTORY_DAYS:90}
+    horizon-days: ${KARYO_FORECAST_HORIZON_DAYS:30}
+    review-period-days: ${KARYO_FORECAST_REVIEW_DAYS:14}
+    ewma-alpha: ${KARYO_FORECAST_EWMA_ALPHA:0.3}
+  slotting:
+    history-days: ${KARYO_SLOTTING_HISTORY_DAYS:90}
+    a-threshold: ${KARYO_SLOTTING_A_THRESHOLD:0.80}
+    b-threshold: ${KARYO_SLOTTING_B_THRESHOLD:0.15}
+    mismatch-threshold: ${KARYO_SLOTTING_MISMATCH_THRESHOLD:0.30}
+  simulation:
+    lead-time-days: ${KARYO_SIM_LEAD_TIME:7}
+    service-level: ${KARYO_SIM_SERVICE_LEVEL:0.95}
+    history-days: ${KARYO_SIM_HISTORY_DAYS:90}
+    review-period-days: ${KARYO_SIM_REVIEW_DAYS:14}
+    simulator: ${KARYO_SIM_SIMULATOR:lost-sales}
+  work:
+    # Active WorkDispatchStrategy, selected BY NAME (St6, stocktaking-block sprint) -- an unknown
+    # name is a hard failure at dispatch time, never a silent fallback to another registered
+    # strategy. "STRICT_PRIORITY" is a non-empty default (SRCFG00040 boot-trap rule).
+    dispatch-strategy: ${KARYO_WORK_DISPATCH_STRATEGY:STRICT_PRIORITY}   # STRICT_PRIORITY | TRAVEL_PATH
+  sequence:
+    # Active SequenceNumberGenerator, selected BY NAME (SC17) -- an unknown name is a hard
+    # failure at app boot (SequenceNumberService.validateOnStartup), never a silent fallback to
+    # another registered generator. "TIMESTAMP_RANDOM" is a non-empty default (SRCFG00040 boot-trap rule).
+    generator: ${KARYO_SEQUENCE_GENERATOR:TIMESTAMP_RANDOM}   # TIMESTAMP_RANDOM | FORMATTED_COUNTER
+  receiving:
+    # Instance-level over-receipt hard stop (inbound-completion row 10). Default true
+    # preserves the original per-request-only behavior; false makes the instance the
+    # STRICTER gate -- a per-request allowOverReceipt=true can no longer override it.
+    allow-over-receipt: ${KARYO_RECEIVING_ALLOW_OVER_RECEIPT:true}
+  auth-audit:
+    # SC19: Keycloak login/logout audit poller (KeycloakEventPoller -> InventoryJournal).
+    # Non-empty defaults per the SRCFG00040 boot-trap rule.
+    enabled: ${KARYO_AUTH_AUDIT:true}
+    poll-interval: ${KARYO_AUTH_AUDIT_INTERVAL:60s}
+  inventory:
+    purge:
+      # Row 18: the DELETABLE-stock-unit reaper (StockPurgeScheduler). Irreversible -- an
+      # existing deployment must opt in. Non-empty defaults per the SRCFG00040 boot-trap rule.
+      # The per-client retention window itself is an SC16 catalog entry
+      # (karyo.inventory.purge.retention-days), not an env var: retention is a data policy,
+      # not an ops preference.
+      enabled: ${KARYO_INVENTORY_PURGE:false}
+      interval: ${KARYO_INVENTORY_PURGE_INTERVAL:1h}
+      # Row 18 fix round 2 (I3, adjudication A9): caps both candidate queries per purge(clientId)
+      # call so one tick is bounded and progress is monotonic even under a partial failure. An
+      # ops knob, not an SC16 data-policy property -- same reasoning as enabled/interval above.
+      batch-size: ${KARYO_INVENTORY_PURGE_BATCH:500}
+  replenishment:
+    # R11: opt-in per-tenant auto-scan wrapper around the on-demand
+    # POST /api/v1/replenishment/scan (ReplenishmentScheduler). Karyo-original -- no legacy
+    # scheduler to draw parity from. Defaults OFF; non-empty defaults per SRCFG00040.
+    auto-scan-enabled: ${KARYO_REPLENISHMENT_AUTO_SCAN:false}
+    scan-interval: ${KARYO_REPLENISHMENT_SCAN_INTERVAL:10m}
+  crossdock:
+    # Cross-docking sprint (Task 6): CrossDockExpirySweep's tick -- STAGED/MATCHED rows past
+    # their staging deadline (AUTO_PUTAWAY/ALERT) plus COMPLETED detection. Non-empty default
+    # per SRCFG00040.
+    sweep-interval: ${KARYO_CROSSDOCK_SWEEP_INTERVAL:5m}
+  wave:
+    # Wave bulk fulfillment sprint (Task 9): WaveScheduler's tick -- per-strategy opt-in
+    # (waveAutoRelease) + per-client SC16 kill-switch (karyo.wave.auto-release), both default
+    # off. Non-empty default per SRCFG00040.
+    auto-interval: ${KARYO_WAVE_AUTO_INTERVAL:5m}
+  streaming:
+    # Order streaming (B3): StreamingReleaseScheduler's tick. Per-client SC16 kill-switch
+    # karyo.streaming.enabled (default false) gates it. Non-empty default per SRCFG00040.
+    interval: ${KARYO_STREAMING_INTERVAL:5s}
+  demo:
+    enabled: ${KARYO_DEMO:off}
+    history-days: ${KARYO_DEMO_HISTORY_DAYS:120}
+    seed: ${KARYO_DEMO_SEED:42}
+    orders-per-day: ${KARYO_DEMO_ORDERS_PER_DAY:8}
+    sku-count: ${KARYO_DEMO_SKU_COUNT:24}
+    location-count: ${KARYO_DEMO_LOCATION_COUNT:40}
+  webhooks:
+    poll-interval: 5s
+    batch-size: 100
+    http-timeout: 10s
+    max-attempts: 8
+    backoff-base: 10s
+    backoff-cap: 1h
+  shipping:
+    ship-from:
+      name: "Karyo Demo Warehouse"
+      street: "1 Logistics Way"
+      city: "Distribution City"
+      zip-code: "00000"
+      country: "US"
+
+# --- Test profile (disable AI dev services; tests don't call LLMs) ---
+'%test':
+  quarkus:
+    langchain4j:
+      ollama:
+        devservices:
+          enabled: false
+      anthropic:
+        claude:
+          api-key: "test-placeholder"
+  karyo:
+    auth-audit:
+      # Tests drive the poller via runOnce() directly; park the background schedule far out
+      # so a scheduled pass can never race a test's direct call (ConcurrentExecution.SKIP
+      # only guards scheduled-vs-scheduled, not scheduled-vs-manual).
+      poll-interval: 6h
+    monitors:
+      # Same rationale: AlertDeliveryTest drives the relay via runOnce() directly.
+      delivery-interval: 6h
+    replenishment:
+      # Same rationale: ReplenishmentSchedulerTest drives runOnce() directly; ConcurrentExecution.SKIP
+      # only guards scheduled-vs-scheduled, not scheduled-vs-manual, so park the background tick far out.
+      scan-interval: 6h
+    wave:
+      # Same rationale: WaveSchedulerIT drives runOnce() directly; park the background tick far
+      # out so it can never race the test's own call.
+      auto-interval: 6h
+    streaming:
+      # Same rationale: StreamingReleaseSchedulerIT drives runOnce() directly.
+      interval: 6h
+    inventory:
+      purge:
+        # Same rationale: StockPurgeSchedulerIntegrationTest drives runOnce() directly; park the
+        # background tick far out so it can never race the test's own call.
+        interval: 6h
+
+# --- Dev profile (Compose Dev Services auto-discovers compose-devservices.yml) ---
+'%dev':
+  quarkus:
+    keycloak:
+      devservices:
+        realm-path: keycloak-realm.json
+    hibernate-orm:
+      log:
+        sql: true
+    otel:
+      enabled: false
+
+# --- Prod profile (explicit datasource + external infra) ---
+'%prod':
+  quarkus:
+    datasource:
+      username: ${DB_USERNAME:karyo}
+      password: ${DB_PASSWORD:karyo}
+      jdbc:
+        url: ${DB_URL:jdbc:postgresql://postgresql:5432/karyo}
+      devservices:
+        enabled: false
+    oidc:
+      auth-server-url: ${OIDC_URL:http://keycloak:8080/auth/realms/karyo}
+      credentials:
+        secret: ${OIDC_SECRET}
+    keycloak:
+      admin-client:
+        server-url: ${KEYCLOAK_ADMIN_URL:http://keycloak:8080/auth}
+        client-secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+    otel:
+      sdk:
+        disabled: true
+    log:
+      console:
+        json:
+          enabled: true
+      level: INFO
+    hibernate-orm:
+      log:
+        sql: false

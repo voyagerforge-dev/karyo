@@ -1,0 +1,8 @@
+<html><head><style>{|body{font-family:sans-serif;font-size:12px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:4px;text-align:left}|}</style></head>
+<body>
+<h2>PACKET CONTENT LIST</h2>
+<p>Shipping Unit: {shippingUnitNumber} &#160; Generated: {generatedAt}</p>
+<table><thead><tr><th>SKU</th><th>Qty</th><th>Lot</th><th>Best Before</th><th>Serial</th></tr></thead><tbody>
+{#for line in lines}<tr><td>{line.itemDataNumber}</td><td>{line.amount}</td><td>{line.lotNumber}</td><td>{line.bestBefore}</td><td>{line.serialNumber}</td></tr>{/for}
+</tbody></table>
+</body></html>

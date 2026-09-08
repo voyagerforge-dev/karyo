@@ -1,0 +1,61 @@
+FROM docker.io/library/node:22-alpine AS builder
+
+WORKDIR /app
+COPY frontend/web/package.json frontend/web/package-lock.json ./
+RUN npm ci
+COPY frontend/web/ ./
+RUN npm run build
+
+FROM docker.io/library/node:22-alpine AS mobile-builder
+WORKDIR /app
+COPY frontend/mobile/package.json frontend/mobile/package-lock.json ./
+RUN npm ci
+COPY frontend/mobile/ ./
+RUN npm run build
+
+# Supported stable stream; scan the exact built image before release.
+FROM docker.io/library/nginx:1.30.4-alpine
+
+# Catch up to supported Alpine fixes; fresh release builds must bypass cached layers.
+# Drop apk's timestamped log, matching the service image's reproducibility pattern.
+RUN apk upgrade --no-cache && rm -f /var/log/apk.log
+
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom config
+COPY infrastructure/docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY infrastructure/docker/nginx/proxy_params.conf /etc/nginx/proxy_params.conf
+
+# Copy built SPA
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy index.html as template for envsubst (KEYCLOAK_URL injection)
+COPY --from=builder /app/dist/index.html /usr/share/nginx/html/index.html.template
+
+# Copy built Floor PWA under /m
+COPY --from=mobile-builder /app/dist /usr/share/nginx/html/m
+COPY --from=mobile-builder /app/dist/index.html /usr/share/nginx/html/m/index.html.template
+
+# Custom entrypoint: envsubst on index.html then start nginx
+COPY infrastructure/docker/nginx/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Licence notices, at the same documented path as the application image
+# (Apache-2.0 section 4(d)): `docker run --rm --entrypoint cat <image> /app/NOTICE`, the same
+# invocation the CI assertion uses against both images. This image is the
+# other half of what a customer receives, and it is a distribution of the frontend sources
+# in its own right. The third-party inventory travels with them because the bundles served
+# here carry the SIL-OFL-1.1 font binaries the licence label does not enumerate; it loses
+# its .md so all three sit under one naming inside the image.
+COPY NOTICE LICENSE /app/
+COPY THIRD-PARTY-NOTICES.md /app/THIRD-PARTY-NOTICES
+
+# Apache-2.0 alone, unlike the application image: the bundles this serves carry no
+# commercial module, so a second term would overstate what a customer received.
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+
+EXPOSE 80
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]

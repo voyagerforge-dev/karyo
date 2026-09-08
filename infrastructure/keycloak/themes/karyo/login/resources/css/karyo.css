@@ -1,0 +1,278 @@
+/*
+ * Karyo — Keycloak login theme (Control design system).
+ * Light reskin over the base keycloak login layout: warm-charcoal surface,
+ * lime signal accent, Space Grotesk / JetBrains Mono. Selectors are doubled up
+ * across the classic and PatternFly login markup so the reskin holds regardless
+ * of which base template Keycloak renders.
+ */
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../fonts/space-grotesk.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --k-bg: #14120d;
+  --k-card: #1b1813;
+  --k-fg: #f3efe4;
+  --k-muted: #8c836f;
+  --k-border: #2c281e;
+  --k-input: #14120d;
+  --k-acc: #c7f24e;
+  --k-acc-fg: #14120d;
+  --k-danger: #ff6a45;
+}
+
+/* ---- page surface ---- */
+html,
+body,
+body.kc-body,
+.login-pf,
+.login-pf body,
+.login-pf-page {
+  background: var(--k-bg) !important;
+  color: var(--k-fg);
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+.login-pf-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ---- brand header ---- */
+#kc-header,
+.pf-c-login__header,
+.pf-v5-c-login__header {
+  text-align: center;
+}
+#kc-header-wrapper {
+  font-size: 0; /* hide the default realm name text */
+  padding: 0 0 22px;
+  line-height: 0;
+}
+#kc-header-wrapper::before {
+  content: "";
+  display: inline-block;
+  width: 168px;
+  height: 44px;
+  background-image: url("../img/karyo-logo.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* ---- card ---- */
+.login-pf-page .card-pf,
+.card-pf,
+.pf-c-login__main,
+.pf-v5-c-login__main {
+  background: var(--k-card) !important;
+  border: 1px solid var(--k-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 48px -24px rgba(0, 0, 0, 0.7) !important;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 30px 30px 26px;
+}
+/* inner content wrappers must NOT re-draw a card (avoids a nested double-frame) */
+#kc-content,
+#kc-content-wrapper,
+.pf-c-login__main-body,
+.pf-v5-c-login__main-body {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+#kc-page-title,
+.pf-c-login__main-header-desc,
+.pf-c-title {
+  color: var(--k-fg) !important;
+  font-family: "Space Grotesk", sans-serif !important;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---- labels + inputs ---- */
+label,
+.control-label,
+.pf-c-form__label,
+.pf-v5-c-form__label,
+.pf-c-form__label-text {
+  color: var(--k-muted) !important;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+.form-control,
+.pf-c-form-control,
+.pf-v5-c-form-control,
+select {
+  background: var(--k-input) !important;
+  border: 1px solid var(--k-border) !important;
+  border-radius: 10px !important;
+  color: var(--k-fg) !important;
+  height: 42px;
+  padding: 0 13px;
+  font-family: "Space Grotesk", sans-serif !important;
+  box-shadow: none !important;
+}
+input::placeholder {
+  color: #6e6655;
+}
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+.form-control:focus,
+.pf-c-form-control:focus,
+.pf-v5-c-form-control:focus {
+  border-color: var(--k-acc) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(199, 242, 78, 0.16) !important;
+}
+
+/* mono for codes (OTP / recovery) */
+input[name="totp"],
+input[autocomplete="one-time-code"] {
+  font-family: "JetBrains Mono", ui-monospace, monospace !important;
+  letter-spacing: 0.12em;
+}
+
+/* ---- primary button ---- */
+input[type="submit"],
+button[type="submit"],
+.btn-primary,
+#kc-login,
+.pf-c-button.pf-m-primary,
+.pf-v5-c-button.pf-m-primary {
+  background: var(--k-acc) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  color: var(--k-acc-fg) !important;
+  font-family: "Space Grotesk", sans-serif !important;
+  font-weight: 600 !important;
+  height: 42px;
+  letter-spacing: 0.01em;
+  text-shadow: none !important;
+  transition: opacity 0.15s ease;
+}
+input[type="submit"]:hover,
+button[type="submit"]:hover,
+.btn-primary:hover,
+#kc-login:hover,
+.pf-c-button.pf-m-primary:hover {
+  opacity: 0.9 !important;
+}
+
+/* secondary / link buttons */
+.btn-default,
+.pf-c-button.pf-m-secondary,
+.pf-v5-c-button.pf-m-secondary {
+  background: transparent !important;
+  border: 1px solid var(--k-border) !important;
+  border-radius: 10px !important;
+  color: var(--k-fg) !important;
+}
+
+/* password show/hide toggle (input group) — the pf-m-control button was
+   rendering as a bright white box against the dark card. */
+.pf-c-input-group,
+.pf-v5-c-input-group,
+.pf-c-input-group__text,
+.pf-v5-c-input-group__item {
+  background: transparent !important;
+  border: none !important;
+}
+.pf-c-input-group input.pf-c-form-control,
+.pf-v5-c-input-group input.pf-v5-c-form-control {
+  border-right: none !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+button.pf-c-button.pf-m-control,
+button.pf-v5-c-button.pf-m-control,
+#kc-passwordVisibilitySwitch,
+.pf-c-input-group > button,
+.pf-v5-c-input-group > button,
+.pf-v5-c-input-group__item > button {
+  background: var(--k-input) !important;
+  border: 1px solid var(--k-border) !important;
+  border-left: none !important;
+  border-radius: 0 10px 10px 0 !important;
+  color: var(--k-muted) !important;
+  height: 42px;
+  box-shadow: none !important;
+}
+button.pf-c-button.pf-m-control:hover,
+button.pf-v5-c-button.pf-m-control:hover,
+#kc-passwordVisibilitySwitch:hover {
+  color: var(--k-fg) !important;
+}
+button.pf-c-button.pf-m-control svg,
+button.pf-v5-c-button.pf-m-control svg,
+#kc-passwordVisibilitySwitch svg,
+.pf-c-input-group > button svg,
+.pf-v5-c-input-group__item > button svg {
+  fill: currentColor !important;
+}
+
+/* ---- links ---- */
+a,
+#kc-registration a,
+#kc-info-wrapper a {
+  color: var(--k-acc) !important;
+}
+a:hover {
+  opacity: 0.85;
+}
+
+/* ---- checkbox (remember me) ---- */
+.checkbox label,
+#kc-form-options label {
+  color: var(--k-muted) !important;
+}
+
+/* ---- alerts / errors ---- */
+.alert-error,
+.pf-c-alert.pf-m-danger,
+.pf-m-error,
+.kc-feedback-text,
+#input-error {
+  color: var(--k-danger) !important;
+}
+.alert,
+.pf-c-alert {
+  background: rgba(255, 106, 69, 0.1) !important;
+  border: 1px solid rgba(255, 106, 69, 0.3) !important;
+  border-radius: 10px !important;
+  color: var(--k-fg) !important;
+}
+
+/* ---- misc chrome ---- */
+#kc-info-wrapper,
+.pf-c-login__main-footer,
+#kc-form-options {
+  color: var(--k-muted) !important;
+}

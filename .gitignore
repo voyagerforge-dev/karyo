@@ -1,0 +1,78 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+**/bin/main/
+**/bin/test/
+
+# Build outputs
+target/
+build/
+*.class
+*.jar
+*.war
+__pycache__/
+*.pyc
+
+# Dependencies
+node_modules/
+.gradle/
+.m2/
+
+# Playwright
+playwright-report/
+test-results/
+
+# Pact generated files
+**/pacts/
+.kotlin/
+
+# Logs
+*.log
+logs/
+
+# JVM dumps
+*.hprof
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.prod
+scripts/.env.prod
+scripts/.env.prod.postgresql
+scripts/.env.prod.keycloak
+scripts/.env.prod.app
+scripts/.env.prod.nginx
+*.key
+*.pem
+
+# Claude Code local overrides
+.claude.local.md
+.serena/
+
+# Kubernetes secrets
+secrets/
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Logseq internal
+docs/learning/logseq/bak/
+docs/learning/logseq/.recycle/
+
+# License signing key (Ed25519 private key + demo token) — never commit
+scripts/.license-signing-key
+
+# Distribution service (distribution/). The catalogue IS the customer list and the venv is
+# machine-local; neither belongs in git. See distribution/README.md.
+distribution/.venv/
+distribution/config/
+distribution/catalog.json
+distribution/.env

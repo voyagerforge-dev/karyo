@@ -1,0 +1,15 @@
+Karyo WMS
+Copyright 2026 Yashraj Padhi
+
+Karyo WMS achieves behavioral parity with the myWMS warehouse management
+system (GPL-3.0-or-later, Copyright LinogistiX GmbH / Matthias Krane) as an
+independent implementation. No myWMS source code is included in, linked by,
+or distributed with this software.
+
+Optional commercial engines - Event monitors, Demand forecasting, Slotting
+advisor, Reorder simulation, Cross-docking, Wave fulfillment, Order streaming,
+Document templates, and Cartonization - are not included in this public
+repository. Karyo source in this repository is licensed under Apache-2.0 as
+stated in LICENSE; third-party materials remain under the licenses listed in
+THIRD-PARTY-NOTICES.md. See PAID-MODULES.md for engine descriptions, licence
+keys, UI availability, and the route to the project captain.

@@ -1,0 +1,34 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+}
+
+/* Floor HMI tokens — high contrast, dark-first (warehouse glare) */
+:root {
+  --floor-bg: #0B0B0D;
+  --floor-surface: #18181B;
+  --floor-ink: #FAFAFA;
+  --floor-muted: #A1A1AA;
+  --floor-rule: #3F3F46;
+  --floor-accent: #2563EB;
+  --floor-ok: #16A34A;
+  --floor-ok-ink: #DCFCE7;
+  --floor-warn: #D97706;
+  --floor-error: #DC2626;
+  --floor-error-ink: #FEE2E2;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--floor-bg);
+  color: var(--floor-ink);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+.numeric { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }

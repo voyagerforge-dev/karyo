@@ -1,0 +1,13 @@
+<html><head><style>{|body{font-family:sans-serif;font-size:12px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:4px;text-align:left}h2{margin-bottom:4px}|}</style></head>
+<body>
+<h2>DELIVERY NOTE</h2>
+<p>Order: {orderNumber} &#160; Delivery date: {deliveryDate} &#160; Generated: {generatedAt}</p>
+{#if hasSender}<p><b>Sender</b><br/>{senderName}</p>{/if}
+<p><b>Ship To</b><br/>{customerName}<br/>{street} {streetNumber}<br/>{city} {zipCode} {country}</p>
+<table><thead><tr><th>SKU</th><th>External #</th><th>Lot</th><th>Ordered</th><th>Picked</th><th>Substituted</th><th>Unit Price</th><th>Line Total</th></tr></thead><tbody>
+{#for line in lines}<tr><td>{line.itemDataNumber}</td><td>{line.externalNumber}</td><td>{line.lotNumber}</td><td>{line.ordered}</td><td>{line.picked}</td><td>{line.substituted}</td><td>{line.unitPrice}</td><td>{line.lineTotal}</td></tr>{/for}
+</tbody></table>
+<p>Total (ordered, priced lines): {total}</p>
+{#if hasUnpriced}<p><i>unpriced lines excluded from total</i></p>{/if}
+{#if hasNotes}<p><b>Notes:</b> {notes}</p>{/if}
+</body></html>

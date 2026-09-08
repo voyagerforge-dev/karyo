@@ -1,0 +1,78 @@
+[versions]
+kotlin = "2.3.10"
+quarkus = "3.33.3.2"
+mockk = "1.13.13"
+assertj = "3.27.3"
+restAssured = "5.5.0"
+detekt = "2.0.0-alpha.2"
+dependencyCheck = "12.2.0"
+pact-quarkiverse = "1.6.0"
+gatling = "3.15.0"
+openhtmltopdf = "1.0.10"
+
+[libraries]
+# Quarkus BOM
+quarkus-bom = { group = "io.quarkus.platform", name = "quarkus-bom", version.ref = "quarkus" }
+quarkus-langchain4j-bom = { group = "io.quarkus.platform", name = "quarkus-langchain4j-bom", version.ref = "quarkus" }
+
+# Quarkus extensions (version managed by BOM)
+quarkus-kotlin = { group = "io.quarkus", name = "quarkus-kotlin" }
+quarkus-rest = { group = "io.quarkus", name = "quarkus-rest" }
+quarkus-rest-jackson = { group = "io.quarkus", name = "quarkus-rest-jackson" }
+quarkus-hibernate-orm-panache-kotlin = { group = "io.quarkus", name = "quarkus-hibernate-orm-panache-kotlin" }
+quarkus-jdbc-postgresql = { group = "io.quarkus", name = "quarkus-jdbc-postgresql" }
+quarkus-flyway = { group = "io.quarkus", name = "quarkus-flyway" }
+quarkus-redis-client = { group = "io.quarkus", name = "quarkus-redis-client" }
+quarkus-cache = { group = "io.quarkus", name = "quarkus-cache" }
+quarkus-smallrye-fault-tolerance = { group = "io.quarkus", name = "quarkus-smallrye-fault-tolerance" }
+quarkus-smallrye-health = { group = "io.quarkus", name = "quarkus-smallrye-health" }
+quarkus-micrometer-registry-prometheus = { group = "io.quarkus", name = "quarkus-micrometer-registry-prometheus" }
+quarkus-opentelemetry = { group = "io.quarkus", name = "quarkus-opentelemetry" }
+quarkus-logging-json = { group = "io.quarkus", name = "quarkus-logging-json" }
+quarkus-oidc = { group = "io.quarkus", name = "quarkus-oidc" }
+quarkus-hibernate-validator = { group = "io.quarkus", name = "quarkus-hibernate-validator" }
+quarkus-rest-client-jackson = { group = "io.quarkus", name = "quarkus-rest-client-jackson" }
+quarkus-config-yaml = { group = "io.quarkus", name = "quarkus-config-yaml" }
+quarkus-container-image-jib = { group = "io.quarkus", name = "quarkus-container-image-jib" }
+quarkus-kubernetes = { group = "io.quarkus", name = "quarkus-kubernetes" }
+quarkus-scheduler = { group = "io.quarkus", name = "quarkus-scheduler" }
+quarkus-mailer = { group = "io.quarkus", name = "quarkus-mailer" }
+quarkus-keycloak-admin-rest-client = { group = "io.quarkus", name = "quarkus-keycloak-admin-rest-client" }
+quarkus-qute = { group = "io.quarkus", name = "quarkus-qute" }
+openhtmltopdf-pdfbox = { group = "com.openhtmltopdf", name = "openhtmltopdf-pdfbox", version.ref = "openhtmltopdf" }
+
+# Quarkus LangChain4j: versions managed by the matching platform member BOM above.
+quarkus-langchain4j = { module = "io.quarkiverse.langchain4j:quarkus-langchain4j-core" }
+quarkus-langchain4j-anthropic = { module = "io.quarkiverse.langchain4j:quarkus-langchain4j-anthropic" }
+quarkus-langchain4j-ollama = { module = "io.quarkiverse.langchain4j:quarkus-langchain4j-ollama" }
+
+# Jackson Kotlin module (version managed by Jackson BOM via Quarkus)
+jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin" }
+
+# Testing (JUnit 6; retain catalog accessor names used by the module build scripts)
+quarkus-junit5 = { group = "io.quarkus", name = "quarkus-junit" }
+quarkus-junit5-mockito = { group = "io.quarkus", name = "quarkus-junit-mockito" }
+quarkus-test-security-oidc = { group = "io.quarkus", name = "quarkus-test-security-oidc" }
+quarkus-devservices-keycloak = { group = "io.quarkus", name = "quarkus-devservices-keycloak" }
+rest-assured = { group = "io.rest-assured", name = "rest-assured", version.ref = "restAssured" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
+
+# Pact Quarkiverse extensions
+quarkus-pact-provider = { group = "io.quarkiverse.pact", name = "quarkus-pact-provider", version.ref = "pact-quarkiverse" }
+quarkus-pact-consumer = { group = "io.quarkiverse.pact", name = "quarkus-pact-consumer", version.ref = "pact-quarkiverse" }
+
+# Jakarta (for api module - no Quarkus dependency)
+jakarta-cdi-api = { group = "jakarta.enterprise", name = "jakarta.enterprise.cdi-api", version = "4.1.0" }
+jakarta-persistence-api = { group = "jakarta.persistence", name = "jakarta.persistence-api", version = "3.2.0" }
+jakarta-validation-api = { group = "jakarta.validation", name = "jakarta.validation-api", version = "3.1.0" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+quarkus = { id = "io.quarkus", version.ref = "quarkus" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
+dependencyCheck = { id = "org.owasp.dependencycheck", version.ref = "dependencyCheck" }
+shadow = { id = "com.gradleup.shadow", version = "9.0.0-beta12" }
+gatling = { id = "io.gatling.gradle", version.ref = "gatling" }

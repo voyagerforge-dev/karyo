@@ -1,0 +1,8 @@
+<html><head><style>{|body{font-family:sans-serif;font-size:12px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:4px;text-align:left}|}</style></head>
+<body>
+<h2>UNIT LOAD CONTENT LIST</h2>
+<p>Unit Load: {labelId} &#160; Location: {storageLocationName} &#160; Generated: {generatedAt}</p>
+<table><thead><tr><th>SKU</th><th>Qty</th><th>Lot</th><th>Best Before</th><th>Serial</th><th>Lock</th></tr></thead><tbody>
+{#for su in stockUnits}<tr><td>{su.itemDataNumber}</td><td>{su.amount}</td><td>{su.lotNumber}</td><td>{su.bestBefore}</td><td>{su.serialNumber}</td><td>{su.lock}</td></tr>{/for}
+</tbody></table>
+</body></html>

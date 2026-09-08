@@ -1,0 +1,81 @@
+FROM docker.io/library/eclipse-temurin:21-jre-alpine
+
+ARG SERVICE_DIR
+
+# Take the Alpine package fixes the base image has not been rebuilt for yet.
+#
+# The base tag floats, but a floating tag only tracks eclipse-temurin's own rebuild
+# cadence, not Alpine's package feed, and the gap between them is measured in
+# CVEs. On 2026-09-05 a freshly pulled 21-jre-alpine carried openssl/libssl3/
+# libcrypto3 3.5.7-r0 while alpine v3.24/main already published 3.5.8-r0 -- three
+# HIGH findings (CVE-2026-14456, one per package) that nothing in this repository
+# had caused and nothing in this repository could fix by pinning harder.
+#
+# `apk upgrade` takes that catch-up rather than pinning a version that is correct
+# for exactly as long as it takes the next advisory to land. Be precise about what
+# it guarantees, because it is less than it looks: the layer is cache-keyed on its
+# own instruction text plus the parent layer, and podman's default build pull policy
+# is "missing", so CI - which passes neither --pull nor --no-cache - never re-pulls a
+# base tag it already has in the local store. This is therefore a ONE-TIME catch-up,
+# frozen at whatever the runner's cached base was when it was last replaced; an
+# upstream temurin rebuild is not observed at all. Only `scripts/scan-image.sh`,
+# which passes --pull=always, refreshes it. It is one layer, it adds no packages,
+# and it runs before the application layers so it caches with the base, not the jar.
+#
+# Verify with `./scripts/scan-image.sh`: its severity filter, its --exit-code 1 and
+# its :ro,Z mount are CI's, so the local gate is never more permissive than CI's.
+# `rm /var/log/apk.log` is not tidiness, it is half of what makes this image
+# reproducible. apk appends a wall-clock-stamped line per operation, and once the
+# build itself passes `--timestamp 0` (podman) or SOURCE_DATE_EPOCH (docker BuildKit)
+# that one 3.5 KB file is the ONLY thing left that differs between two builds of
+# identical content -- and it churns its whole 3.32 MiB layer. Both halves are needed:
+# with them, two --no-cache builds of one tree produce the same image ID, so anyone
+# re-pulling an upgrade transfers only the layers that actually changed.
+RUN apk upgrade --no-cache && rm -f /var/log/apk.log
+
+RUN addgroup -S karyo && adduser -S karyo -G karyo
+
+WORKDIR /app
+
+# Licence notices, at a documented path (Apache-2.0 section 4(d)).
+#
+# Karyo's own module jars carry META-INF/NOTICE, META-INF/LICENSE and
+# META-INF/THIRD-PARTY-NOTICES (see the licence-notice block in the root build.gradle.kts);
+# the third-party jars in quarkus-app/lib carry whatever their own publishers put in them.
+# Either way, nobody reads a licence by unzipping a jar. A paying customer receives this
+# image and nothing else, so the statement of what they are allowed to do with it has to be
+# somewhere they can reach: `docker run --rm --entrypoint cat <image> /app/NOTICE`. The
+# entrypoint override is not optional - this image's ENTRYPOINT is exec-form `sh -c`, so
+# trailing arguments become $0/$1 of a script that ignores them and the JVM starts instead.
+# That NOTICE is also what names the nine commercial `-core` modules as outside the Apache
+# grant, and the third-party inventory is what discloses the LGPL-2.1 and EPL-2.0 components
+# this image ships, which the licence label deliberately does not enumerate.
+#
+# Copied before the application layers because these files change far less often than the
+# jar does, so they cache with the base rather than invalidating on every build. The
+# inventory loses its .md so all three sit under one naming inside the image.
+COPY NOTICE LICENSE ./
+COPY THIRD-PARTY-NOTICES.md THIRD-PARTY-NOTICES
+
+# Quarkus fast-jar layout
+COPY ${SERVICE_DIR}/build/quarkus-app/lib/ lib/
+COPY ${SERVICE_DIR}/build/quarkus-app/*.jar ./
+COPY ${SERVICE_DIR}/build/quarkus-app/app/ app/
+COPY ${SERVICE_DIR}/build/quarkus-app/quarkus/ quarkus/
+
+USER karyo
+
+# Sized for the single karyo-app modular monolith (container mem_limit defaults to 1536m)
+ENV JAVA_OPTS="-Xms128m -Xmx1024m -XX:+UseContainerSupport -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom"
+
+# Declared last so that editing a label never invalidates the cached apk and jar layers
+# above it. The expression differs per source tree and both forms are deliberate, so do not
+# collapse them into one hardcoded value. A build of the full tree ships the nine
+# proprietary `-core` modules named in /app/NOTICE alongside the Apache-2.0 code, so it
+# carries both terms, unlike the nginx image - an image labelled Apache-2.0 alone would
+# misdescribe what a paying customer received. The public source snapshot contains none of
+# those modules, so it is published with `Apache-2.0` alone; the publication gate rewrites
+# this line and refuses to emit the file at all if it no longer matches.
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar quarkus-run.jar"]

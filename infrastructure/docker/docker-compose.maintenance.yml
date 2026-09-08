@@ -1,0 +1,12 @@
+# Loopback-only Keycloak admin port for the isolated maintenance window.
+#
+# docker-compose.prod.yml publishes no Keycloak port: an ordinary production deployment reaches
+# the identity service only through nginx, so /auth/admin and the Admin REST API are never
+# addressable from the deploy host. The realm migration and rollback runbooks in DEPLOY.md layer
+# this file on top of the production file to bring the port up while every public route is
+# stopped, and recreate Keycloak from the production file alone to take it back down. Taking it
+# down is a mandatory numbered step of both runbooks, not a cleanup afterthought.
+services:
+  keycloak:
+    ports:
+      - "127.0.0.1:${KARYO_KEYCLOAK_MAINTENANCE_PORT:-8181}:8080"

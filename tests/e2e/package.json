@@ -1,0 +1,14 @@
+{
+  "name": "karyo-e2e",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:helpers": "node --experimental-strip-types --test fixtures/*.test.ts",
+    "test:operational": "playwright test --config playwright.operational.config.ts",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}

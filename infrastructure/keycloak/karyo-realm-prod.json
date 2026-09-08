@@ -1,0 +1,463 @@
+{
+  "realm": "karyo",
+  "enabled": true,
+  "components": {
+    "org.keycloak.userprofile.UserProfileProvider": [
+      {
+        "providerId": "declarative-user-profile",
+        "subType": "declarative-user-profile",
+        "config": {
+          "kc.user.profile.config": [
+            "{\"unmanagedAttributePolicy\":\"ENABLED\",\"attributes\":[{\"name\":\"username\",\"displayName\":\"${username}\",\"validations\":{\"length\":{\"min\":3,\"max\":255},\"username-prohibited-characters\":{},\"up-username-not-idn-homograph\":{}},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"email\",\"displayName\":\"${email}\",\"validations\":{\"email\":{},\"length\":{\"max\":255}},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"firstName\",\"displayName\":\"${firstName}\",\"validations\":{\"length\":{\"max\":255},\"person-name-prohibited-characters\":{}},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"lastName\",\"displayName\":\"${lastName}\",\"validations\":{\"length\":{\"max\":255},\"person-name-prohibited-characters\":{}},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"client_id\",\"displayName\":\"Tenant Client ID\",\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]},\"multivalued\":false},{\"name\":\"principal_kind\",\"displayName\":\"Principal Kind\",\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]},\"multivalued\":false},{\"name\":\"tenant_code\",\"displayName\":\"Tenant Code\",\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]},\"multivalued\":false},{\"name\":\"warehouse_id\",\"displayName\":\"Warehouse ID\",\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\"]},\"multivalued\":false}]}"
+          ]
+        }
+      }
+    ]
+  },
+  "loginTheme": "karyo",
+  "sslRequired": "external",
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "failureFactor": 5,
+  "waitIncrementSeconds": 1800,
+  "maxFailureWaitSeconds": 1800,
+  "maxDeltaTimeSeconds": 43200,
+  "minimumQuickLoginWaitSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "accessTokenLifespan": 900,
+  "ssoSessionMaxLifespan": 28800,
+  "roles": {
+    "realm": [
+      {
+        "name": "inventory-read",
+        "composite": false
+      },
+      {
+        "name": "inventory-write",
+        "composite": false
+      },
+      {
+        "name": "product-read",
+        "composite": false
+      },
+      {
+        "name": "product-write",
+        "composite": false
+      },
+      {
+        "name": "layout-read",
+        "composite": false
+      },
+      {
+        "name": "layout-write",
+        "composite": false
+      },
+      {
+        "name": "order-read",
+        "composite": false
+      },
+      {
+        "name": "order-write",
+        "composite": false
+      },
+      {
+        "name": "task-read",
+        "composite": false
+      },
+      {
+        "name": "task-write",
+        "composite": false
+      },
+      {
+        "name": "fulfillment-read",
+        "composite": false
+      },
+      {
+        "name": "fulfillment-write",
+        "composite": false
+      },
+      {
+        "name": "report-read",
+        "composite": false
+      },
+      {
+        "name": "report-write",
+        "composite": false
+      },
+      {
+        "name": "user-admin",
+        "composite": false
+      },
+      {
+        "name": "tenant-admin",
+        "composite": false
+      },
+      {
+        "name": "integration-read",
+        "composite": false
+      },
+      {
+        "name": "integration-admin",
+        "composite": false
+      },
+      {
+        "name": "ai-read",
+        "composite": false
+      },
+      {
+        "name": "ai-write",
+        "composite": false
+      },
+      {
+        "name": "ADMIN",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "inventory-read",
+            "inventory-write",
+            "product-read",
+            "product-write",
+            "layout-read",
+            "layout-write",
+            "order-read",
+            "order-write",
+            "task-read",
+            "task-write",
+            "fulfillment-read",
+            "fulfillment-write",
+            "report-read",
+            "report-write",
+            "user-admin",
+            "tenant-admin",
+            "integration-read",
+            "integration-admin",
+            "ai-read",
+            "ai-write",
+            "VIEWER"
+          ]
+        }
+      },
+      {
+        "name": "MANAGER",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "inventory-read",
+            "inventory-write",
+            "product-read",
+            "product-write",
+            "layout-read",
+            "layout-write",
+            "order-read",
+            "order-write",
+            "task-read",
+            "task-write",
+            "fulfillment-read",
+            "fulfillment-write",
+            "report-read",
+            "report-write",
+            "ai-read",
+            "VIEWER"
+          ]
+        }
+      },
+      {
+        "name": "OPERATOR",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "inventory-read",
+            "inventory-write",
+            "product-read",
+            "layout-read",
+            "order-read",
+            "order-write",
+            "task-read",
+            "task-write",
+            "fulfillment-read",
+            "fulfillment-write",
+            "VIEWER"
+          ]
+        }
+      },
+      {
+        "name": "RECEIVER",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "inventory-read",
+            "inventory-write",
+            "product-read",
+            "order-read",
+            "order-write",
+            "VIEWER"
+          ]
+        }
+      },
+      {
+        "name": "VIEWER",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "inventory-read",
+            "product-read",
+            "layout-read",
+            "order-read",
+            "task-read",
+            "report-read"
+          ]
+        }
+      },
+      {
+        "name": "INTEGRATOR",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "inventory-read",
+            "order-read",
+            "order-write",
+            "product-read",
+            "product-write",
+            "integration-read"
+          ]
+        }
+      },
+      {
+        "name": "AI_SERVICE",
+        "composite": true,
+        "composites": {
+          "realm": [
+            "inventory-read",
+            "product-read",
+            "layout-read",
+            "order-read",
+            "report-read",
+            "ai-read",
+            "ai-write"
+          ]
+        }
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "service-account-karyo-backend",
+      "enabled": true,
+      "serviceAccountClientId": "karyo-backend",
+      "clientRoles": {
+        "realm-management": [
+          "view-events",
+          "view-users"
+        ]
+      }
+    },
+    {
+      "username": "service-account-karyo-admin",
+      "enabled": true,
+      "serviceAccountClientId": "karyo-admin",
+      "clientRoles": {
+        "realm-management": [
+          "manage-users",
+          "view-realm"
+        ]
+      }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "karyo-backend",
+      "defaultClientScopes": [
+        "acr",
+        "basic",
+        "email",
+        "profile",
+        "roles",
+        "web-origins"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "microprofile-jwt",
+        "offline_access",
+        "organization",
+        "phone"
+      ],
+      "enabled": true,
+      "publicClient": false,
+      "secret": "${OIDC_SECRET}",
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": true,
+      "protocolMappers": [
+        {
+          "name": "client_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "client_id",
+            "claim.name": "client_id",
+            "jsonType.label": "long",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "principal_kind",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "principal_kind",
+            "claim.name": "principal_kind",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "tenant_code",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant_code",
+            "claim.name": "tenant_code",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "warehouse_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "warehouse_id",
+            "claim.name": "warehouse_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "karyo-admin",
+      "defaultClientScopes": [
+        "acr",
+        "basic",
+        "email",
+        "profile",
+        "roles",
+        "web-origins"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "microprofile-jwt",
+        "offline_access",
+        "organization",
+        "phone"
+      ],
+      "enabled": true,
+      "publicClient": false,
+      "secret": "${KEYCLOAK_ADMIN_CLIENT_SECRET}",
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": true
+    },
+    {
+      "clientId": "karyo-web",
+      "defaultClientScopes": [
+        "acr",
+        "basic",
+        "email",
+        "profile",
+        "roles",
+        "web-origins"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "microprofile-jwt",
+        "offline_access",
+        "organization",
+        "phone"
+      ],
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": true,
+      "redirectUris": [
+        "${KARYO_PUBLIC_ORIGIN}/",
+        "${KARYO_PUBLIC_ORIGIN}/silent-check-sso.html",
+        "${KARYO_PUBLIC_ORIGIN}/m/",
+        "${KARYO_PUBLIC_ORIGIN}/m/silent-check-sso.html"
+      ],
+      "webOrigins": [
+        "${KARYO_PUBLIC_ORIGIN}"
+      ],
+      "protocolMappers": [
+        {
+          "name": "client_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "client_id",
+            "claim.name": "client_id",
+            "jsonType.label": "long",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "principal_kind",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "principal_kind",
+            "claim.name": "principal_kind",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "tenant_code",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant_code",
+            "claim.name": "tenant_code",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "warehouse_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "warehouse_id",
+            "claim.name": "warehouse_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "eventsListeners": [
+    "jboss-logging"
+  ],
+  "eventsEnabled": true,
+  "eventsExpiration": 86400,
+  "enabledEventTypes": [
+    "LOGIN",
+    "LOGOUT",
+    "LOGIN_ERROR",
+    "REGISTER",
+    "UPDATE_PROFILE",
+    "SEND_RESET_PASSWORD",
+    "RESET_PASSWORD"
+  ]
+}

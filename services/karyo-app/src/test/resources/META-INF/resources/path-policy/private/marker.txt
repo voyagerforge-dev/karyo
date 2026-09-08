@@ -1,0 +1,1 @@
+Synthetic path-policy regression marker. Test resources only; not shipped in the application image.

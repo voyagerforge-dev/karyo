@@ -1,0 +1,6 @@
+^XA
+^FO50,50^A0N,40,40^FDUL {labelId}^FS
+^FO50,100^A0N,30,30^FDASN {asnNumber}^FS
+^FO50,140^A0N,30,30^FDItem {itemDataNumber}^FS
+^FO50,200^BCN,100,Y,N,N^FD{labelId}^FS
+^XZ

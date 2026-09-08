@@ -1,0 +1,316 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Self-hosted fonts (fontsource) -- warehouses can be offline, no CDN. */
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/jetbrains-mono";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-sans: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", monospace;
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) + 8px);
+    --radius-3xl: calc(var(--radius) + 12px);
+    --radius-4xl: calc(var(--radius) + 16px);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-error: var(--error);
+    --color-error-foreground: var(--error-foreground);
+    /* Console "Control" signal colors (no-op in light/dark Precision themes). */
+    --color-signal: var(--signal, var(--primary));
+    --color-signal-foreground: var(--signal-foreground, var(--primary-foreground));
+    --color-info: var(--info, var(--primary));
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/*
+ * "Precision" design language (candidate B).
+ * Space Grotesk everywhere, JetBrains Mono for numerals/codes, cool zinc
+ * neutrals, blue-600 accent (the existing brand blue), hairline 1px rules.
+ */
+:root {
+    --radius: 0.625rem;
+    --background: #fafafa;
+    --foreground: #18181b;
+    --card: #ffffff;
+    --card-foreground: #18181b;
+    --popover: #ffffff;
+    --popover-foreground: #18181b;
+    --primary: #2563eb;
+    --primary-foreground: #ffffff;
+    --secondary: #f4f4f5;
+    --secondary-foreground: #18181b;
+    --muted: #f4f4f5;
+    --muted-foreground: #71717a;
+    --accent: #f4f4f5;
+    --accent-foreground: #18181b;
+    --destructive: #dc2626;
+    --success: #dcf2e3;
+    --success-foreground: #166534;
+    --warning: #fef3c7;
+    --warning-foreground: #92400e;
+    --error: #fee2e2;
+    --error-foreground: #b91c1c;
+    --border: #e4e4e7;
+    --input: #e4e4e7;
+    --ring: #2563eb;
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --sidebar: #fafafa;
+    --sidebar-foreground: #18181b;
+    --sidebar-primary: #2563eb;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #f0f0f1;
+    --sidebar-accent-foreground: #18181b;
+    --sidebar-border: #e4e4e7;
+    --sidebar-ring: #2563eb;
+
+    /* Control signal-system fallbacks so accent/signal styling renders
+       outside .theme-control (which overrides all of these). */
+    --acc: 37 99 235;
+    --acc-color: rgb(var(--acc));
+    --acc-dim: rgb(var(--acc) / 0.26);
+    --acc-soft: rgb(var(--acc) / 0.12);
+    --acc-soft30: rgb(var(--acc) / 0.30);
+    --acc-line: rgb(var(--acc) / 0.34);
+    --acc-deep: rgb(var(--acc) / 0.14);
+    --acc-mid: rgb(var(--acc) / 0.55);
+    --signal: rgb(var(--acc));
+    --signal-foreground: #ffffff;
+    --danger: #dc2626;
+    --info: #0284c7;
+}
+
+.dark {
+    --background: #101012;
+    --foreground: #e9e9ec;
+    --card: #17171a;
+    --card-foreground: #e9e9ec;
+    --popover: #17171a;
+    --popover-foreground: #e9e9ec;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: #1f1f23;
+    --secondary-foreground: #e9e9ec;
+    --muted: #1f1f23;
+    --muted-foreground: #9d9da8;
+    --accent: #1f1f23;
+    --accent-foreground: #e9e9ec;
+    --destructive: #ef4444;
+    --success: #173524;
+    --success-foreground: #7bd8a0;
+    --warning: #3a2e11;
+    --warning-foreground: #e8c063;
+    --error: #3a1a1c;
+    --error-foreground: #f2a0a0;
+    --border: #27272b;
+    --input: #2e2e33;
+    --ring: #3b82f6;
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+    --sidebar: #101012;
+    --sidebar-foreground: #e9e9ec;
+    --sidebar-primary: #3b82f6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #1f1f23;
+    --sidebar-accent-foreground: #e9e9ec;
+    --sidebar-border: #27272b;
+    --sidebar-ring: #3b82f6;
+
+    /* Control signal-system fallbacks so accent/signal styling renders
+       outside .theme-control (which overrides all of these). */
+    --acc: 96 165 250;
+    --acc-color: rgb(var(--acc));
+    --acc-dim: rgb(var(--acc) / 0.26);
+    --acc-soft: rgb(var(--acc) / 0.12);
+    --acc-soft30: rgb(var(--acc) / 0.30);
+    --acc-line: rgb(var(--acc) / 0.34);
+    --acc-deep: rgb(var(--acc) / 0.14);
+    --acc-mid: rgb(var(--acc) / 0.55);
+    --signal: rgb(var(--acc));
+    --signal-foreground: #18181b;
+    --danger: #f87171;
+    --info: #38bdf8;
+}
+
+/*
+ * "Control" theme (design handoff: Karyo Control Console).
+ * Warm-charcoal surfaces, acid-lime signal, mono numerics. Applied alongside
+ * `.dark` (so dark: utilities fire); defined AFTER .dark so these token values
+ * win on equal specificity. The accent is one RGB triple + derived alphas —
+ * swap `--acc` to recolor the whole signal system (lime/cyan/amber/violet).
+ */
+.theme-control {
+    /* Accent: lime by default. Override --acc to retheme the signal system. */
+    --acc: 199 242 78;
+    --acc-color: rgb(var(--acc));
+    --acc-dim: rgb(var(--acc) / 0.26);
+    --acc-soft: rgb(var(--acc) / 0.12);
+    --acc-soft30: rgb(var(--acc) / 0.30);
+    --acc-line: rgb(var(--acc) / 0.34);
+    --acc-deep: rgb(var(--acc) / 0.14);
+    --acc-mid: rgb(var(--acc) / 0.55);
+
+    /* Console signal/status palette. */
+    --signal: rgb(var(--acc));
+    --signal-foreground: #14120D;
+    --warning: rgb(240 180 60 / 0.12);
+    --warning-foreground: #F0B43C;
+    --danger: #FF6A45;
+    --info: #5AB7E0;
+
+    /* shadcn token mapping → Control surfaces. */
+    --background: #14120D;
+    --foreground: #F3EFE4;
+    --card: #1B1813;
+    --card-foreground: #F3EFE4;
+    --popover: #1B1813;
+    --popover-foreground: #F3EFE4;
+    --primary: rgb(var(--acc));
+    --primary-foreground: #14120D;
+    --secondary: #1C1A13;
+    --secondary-foreground: #E9E3D5;
+    --muted: #14120D;
+    --muted-foreground: #8C836F;
+    --accent: #232017;
+    --accent-foreground: #E9E3D5;
+    --destructive: #FF6A45;
+    --success: rgb(var(--acc) / 0.12);
+    --success-foreground: rgb(var(--acc));
+    --warning: rgb(240 180 60 / 0.12);
+    --warning-foreground: #F0B43C;
+    --error: rgb(255 106 69 / 0.12);
+    --error-foreground: #FF6A45;
+    --border: #2C281E;
+    --input: #2C281E;
+    --ring: rgb(var(--acc));
+    --chart-1: rgb(var(--acc));
+    --chart-2: #5AB7E0;
+    --chart-3: #F0B43C;
+    --chart-4: #FF6A45;
+    --chart-5: #A78BFA;
+    --sidebar: #100E0A;
+    --sidebar-foreground: #A39B86;
+    --sidebar-primary: rgb(var(--acc));
+    --sidebar-primary-foreground: #14120D;
+    --sidebar-accent: #1C1A13;
+    --sidebar-accent-foreground: #E9E3D5;
+    --sidebar-border: #26221A;
+    --sidebar-ring: rgb(var(--acc));
+}
+
+/*
+ * User-selectable accent (v3 Workspace panel). The whole signal system derives
+ * from the one --acc RGB triple, so overriding it here recolors primary, ring,
+ * sidebar-primary, and every --acc-* alpha. Lime is the .theme-control default;
+ * these set the alternatives. Scoped to .theme-control so they win on the root.
+ * The Workspace drawer writes `data-accent` on <html>.
+ */
+.theme-control[data-accent="cyan"] {
+    --acc: 56 205 230;
+}
+.theme-control[data-accent="amber"] {
+    --acc: 240 180 60;
+}
+.theme-control[data-accent="violet"] {
+    --acc: 167 139 250;
+}
+
+/*
+ * Operations Control "density" prop (v2 handoff). The dashboard wrapper carries
+ * a `data-density` attribute; consumers read these vars via Tailwind arbitrary
+ * values (e.g. `p-[var(--cpad)]`) with literal fallbacks so they paint before
+ * hydration. Comfortable is the default; Command tightens spacing for
+ * control-room/power use. (--bpad drives the shell scroll-body padding —
+ * Comfortable 20/24/30, Command 14/18/20.)
+ */
+[data-density] {
+    --bpad: 20px 24px 30px; /* scroll-body padding (Comfortable) */
+    --cpad: 22px;        /* card / section padding */
+    --kpad: 16px 18px;   /* KPI strip cell padding */
+    --cgap: 20px;        /* main grid + column gaps */
+    --secmb: 20px;       /* margin below Copilot strip & KPI strip */
+    --copad: 18px 20px;  /* Copilot strip padding */
+}
+[data-density="command"] {
+    --bpad: 14px 18px 20px;
+    --cpad: 13px;
+    --kpad: 10px 14px;
+    --cgap: 12px;
+    --secmb: 12px;
+    --copad: 12px 16px;
+}
+
+/* Display headings: Space Grotesk at weight 700 with tight tracking. */
+@utility font-display {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* Uppercase letterspaced micro-label (table headers, card stat labels). */
+@utility text-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+/* Numeric data cells: JetBrains Mono with tabular figures. */
+@utility numeric {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    }
+}

@@ -1,0 +1,8 @@
+ALTER TABLE delivery_orders
+    ADD COLUMN IF NOT EXISTS street         VARCHAR(255),
+    ADD COLUMN IF NOT EXISTS street_number  VARCHAR(40),
+    ADD COLUMN IF NOT EXISTS zip_code       VARCHAR(40),
+    ADD COLUMN IF NOT EXISTS city           VARCHAR(120),
+    ADD COLUMN IF NOT EXISTS country        VARCHAR(80),
+    ADD COLUMN IF NOT EXISTS phone          VARCHAR(60),
+    ADD COLUMN IF NOT EXISTS email          VARCHAR(120);

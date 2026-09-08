@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>MaxLineLength:DefaultOrderReleasePort.kt:DefaultOrderReleasePort$waveSelectionRuleId = node.path("waveSelectionRuleId").let { if (it.isMissingNode || it.isNull) defaults.waveSelectionRuleId else it.asLong() }</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,0 +1,15 @@
+<html><head><style>{|body{font-family:sans-serif;font-size:12px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:4px}|}</style></head>
+<body>
+<h2>PACKING SLIP</h2>
+<p>Order: {orderNumber} Shipment: {shipmentNumber} Date: {date}</p>
+<p><b>Ship To</b><br/>{shipTo.customerName}<br/>{shipTo.street} {shipTo.streetNumber}<br/>{shipTo.city} {shipTo.zipCode} {shipTo.country}</p>
+{#for order in orders}
+<h3>Order {order.orderNumber}</h3>
+{#for unit in order.units}
+<h3>Box {unit.positionIndex}: {unit.unitNumber}</h3>
+<table><thead><tr><th>Item</th><th>Qty</th></tr></thead><tbody>
+{#for line in unit.lines}<tr><td>{line.sku}</td><td>{line.qty}</td></tr>{/for}
+</tbody></table>
+{/for}
+{/for}
+</body></html>
