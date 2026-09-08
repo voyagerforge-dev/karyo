@@ -1,7 +1,7 @@
 package com.karyo.orders.spi
 
 /**
- * ADR-036 Strategy-Driven Configuration — the binding seam for the order domain.
+ * Strategy-driven configuration: the binding seam for the order domain.
  *
  * Resolves *which* [com.karyo.orders.domain.model.OrderStrategy] (by name) applies to an
  * operation, given a [OrderStrategyContext]. Discovered as CDI beans and consulted in

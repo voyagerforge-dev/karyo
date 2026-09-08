@@ -81,8 +81,8 @@ class StorageLocation : TenantEntity() {
     var isClearing: Boolean = false
 
     // L3 (locations-layout sprint, Task 6): myWMS `plcCode` — free-text automation-system
-    // (PLC/WCS) address. Search/display only, zero finder semantics (ADR-034's future
-    // EquipmentAdapter address bridge).
+    // (PLC/WCS) address. Search/display only, zero finder semantics.
+    // An EquipmentAdapter address bridge is not implemented.
     @Column(name = "plc_code", length = 64)
     var plcCode: String? = null
 

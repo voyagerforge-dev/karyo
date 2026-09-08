@@ -8,7 +8,7 @@ kotlin {
     jvmToolchain(21)
 }
 
-// Required for Quarkus CDI proxying — 6 annotations per ADR-028 + PoC requirements
+// Required for Quarkus CDI, REST, persistence and test proxying
 allOpen {
     annotation("jakarta.ws.rs.Path")
     annotation("jakarta.enterprise.context.ApplicationScoped")

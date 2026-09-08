@@ -1,7 +1,7 @@
 package com.karyo.orders.spi
 
 /**
- * In-process read seam: resolves the picking-relevant knobs for an order (via the ADR-036
+ * In-process read seam: resolves the picking-relevant knobs for an order (via the configured
  * strategy resolver chain), so the fulfillment module can drive short-pick recovery with the
  * same settings the order was released under. Returns null when the order doesn't exist /
  * belongs to another tenant.

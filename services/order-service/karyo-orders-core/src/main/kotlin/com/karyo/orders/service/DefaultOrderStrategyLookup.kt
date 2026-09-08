@@ -8,7 +8,7 @@ import com.karyo.security.TenantContext
 import jakarta.enterprise.context.ApplicationScoped
 
 /**
- * Default [OrderStrategyLookup] impl. Resolves the order's [OrderStrategy] through the ADR-036
+ * Default [OrderStrategyLookup] impl. Resolves the order's [OrderStrategy] through the configured
  * resolver chain ([OrderStrategyService.resolve]) and projects the picking-relevant knobs for
  * the fulfillment module. Tenant-scoped with no system-client bypass (mirrors
  * [DefaultDeliveryOrderLookup]): an unset/mismatched tenant returns null (fails closed).

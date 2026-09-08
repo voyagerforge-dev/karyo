@@ -67,7 +67,7 @@ class ProductResource(
     @Path("/by-barcode/{code}")
     @RolesAllowed("product-read")
     fun getByBarcode(@PathParam("code") code: String): Response {
-        // ADR-036 Strategy-SPI: consult resolvers in priority order, first non-null wins
+        // Strategy-SPI: consult resolvers in priority order, first non-null wins
         // (built-in DefaultBarcodeResolver runs last; a custom resolver pre-empts it).
         val sortedResolvers = barcodeResolvers.sortedBy { it.priority() }
 

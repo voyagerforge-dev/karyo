@@ -3,11 +3,11 @@ package com.karyo.fulfillment.spi
 import java.math.BigDecimal
 
 /**
- * Strategy-SPI (ADR-036): turns a pick container's confirmed contents into shipping unit(s). v1.3 ships
- * only OneToOnePackout (the container -> one ShippingUnit + weight); CartonizationPackout (re-pack eaches
- * -> N boxes) and ConsolidationPackout are future beans. Priority-ordered, first-non-null-wins, built-in
- * (OneToOne) runs last. [PackoutResult.shippingUnits] is a LIST and [PackoutResult.complete] tells the
- * service whether packing is done (so future strategies can pack box-by-box across multiple calls).
+ * Turns a pick container's confirmed contents into shipping units. The resolver tries a matching
+ * [name] first, then the remaining strategies in ascending [priority] until one answers. Returning
+ * null defers to that fallback chain; the built-in OneToOne strategy runs last.
+ * [PackoutResult.shippingUnits] supports multiple units, and [PackoutResult.complete] tells the
+ * service whether packing is done, allowing incremental packing across calls.
  */
 interface PackoutStrategy {
     /** Lower runs first; built-in OneToOne uses a high value so any custom strategy wins. */

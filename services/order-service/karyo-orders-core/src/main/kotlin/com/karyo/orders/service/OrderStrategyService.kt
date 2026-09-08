@@ -72,7 +72,7 @@ class OrderStrategyService(
     }
 
     /**
-     * ADR-036 resolution: run the resolver chain (ascending priority, first non-null name wins),
+     * Strategy resolution: run the resolver chain (ascending priority, first non-null name wins),
      * fall back to DEFAULT, then load the entity. Replaces direct id lookup at operation time.
      */
     fun resolve(context: OrderStrategyContext): OrderStrategy {

@@ -3,10 +3,10 @@ package com.karyo.fulfillment.spi
 import java.math.BigDecimal
 
 /**
- * Strategy-SPI (ADR-036): given a release request, decides how an order's reserved work is grouped
+ * Strategy-SPI: given a release request, decides how an order's reserved work is grouped
  * and sequenced into PickOrders. Priority-ordered, first-non-null-wins, built-in (Discrete) runs
  * last. v1.3 ships only DiscreteGroupingStrategy (one order -> one PickOrder); batch/cluster/zone/
- * wave compose here later without a PickOrder refactor (this is the same seam ADR-035 designs).
+ * wave grouping can compose here without changing the PickOrder contract.
  */
 interface PickOrderGroupingStrategy {
     /** Lower runs first; built-in Discrete uses a high value so any custom strategy wins. */

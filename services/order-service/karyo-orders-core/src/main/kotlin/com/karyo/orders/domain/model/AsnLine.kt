@@ -13,7 +13,7 @@ import java.math.BigDecimal
 /**
  * One expected ASN line. Owned by [Asn] (cascade ALL, orphanRemoval).
  * itemDataNumber is denormalized from the product module at creation time
- * (ID-only cross-module reference per ADR-004).
+ * (ID-only cross-module reference).
  *
  * Line lifecycle: CREATED → STARTED on first receipt → FINISHED when
  * receivedAmount >= expectedAmount or when the ASN is force-finished short.

@@ -239,5 +239,5 @@ to execute. Keep the unextended free build usable independently.
 - Configure printers/carriers/providers explicitly. Distinguish downloaded documents, mocks and
   successfully delivered external effects. Keep optional AI disabled until its provider is ready.
 - Record your deployed release, image identities, configuration and tested restore procedure without
-  committing secrets. The requirements register and ADR collection remain useful context, including
-  historical material, while this guide and DEPLOY own the current installation route.
+  committing secrets. The [requirements register](../REQUIREMENTS.md) records product scope;
+  this guide and DEPLOY own the current installation route.

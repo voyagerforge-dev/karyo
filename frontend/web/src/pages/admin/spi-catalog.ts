@@ -90,7 +90,7 @@ export const SPI_CATALOG: readonly SpiSeam[] = [
     module: 'karyo-fulfillment',
     builtIns: ['ManualCarrierAdapter'],
     extensible: true,
-    note: 'ADR-036 strategy SPI. v1.3 ships only ManualCarrierAdapter — the catch-all (handles every carrier) that uses the operator-supplied tracking number or generates one. Real carrier adapters (FedEx/UPS/DHL) register as beans, claim a carrier via handles(), and run at a lower priority so they win for their carrier while Manual stays the fallback.',
+    note: 'Strategy SPI. ManualCarrierAdapter is the built-in fallback (handles every carrier) that uses the operator-supplied tracking number or generates one. Real carrier adapters (FedEx/UPS/DHL) register as beans, claim a carrier via handles(), and run at a lower priority so they win for their carrier while Manual stays the fallback.',
   },
   {
     id: 'packout-strategy',
@@ -99,7 +99,7 @@ export const SPI_CATALOG: readonly SpiSeam[] = [
     module: 'karyo-fulfillment',
     builtIns: ['ONE_TO_ONE (OneToOnePackout)'],
     extensible: true,
-    note: 'ADR-036 strategy SPI. v1.3 ships only OneToOnePackout (one confirmed pick container -> one shipping unit + weight). CartonizationPackout (re-pack eaches into N boxes) and ConsolidationPackout are future beans; custom strategies are priority-ordered ahead of the built-in.',
+    note: 'Strategy SPI. The free default is OneToOnePackout (one confirmed pick container -> one shipping unit + weight). Cartonization and cross-order consolidation require their installed commercial engines. Custom strategies are priority-ordered ahead of the default.',
   },
   {
     id: 'product-lookup',
@@ -120,8 +120,8 @@ export const SPI_CATALOG: readonly SpiSeam[] = [
     note: 'In-process cross-module lookup contract, not a customer extension point — warehouse-layout injects this instead of making a cross-service REST call. Implemented once, by inventory-core.',
   },
   {
-    id: 'adr036-strategies',
-    name: 'Order & Storage Strategies (ADR-036)',
+    id: 'order-storage-strategies',
+    name: 'Order & Storage Strategies',
     spi: 'JSONB-configured strategy knobs — not a compiled SPI',
     module: 'karyo-orders / karyo-layout',
     builtIns: ['DEFAULT order strategy', 'DEFAULT storage strategy'],

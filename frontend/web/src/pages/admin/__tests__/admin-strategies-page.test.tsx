@@ -101,7 +101,7 @@ describe('AdminStrategiesPage', () => {
       expect(screen.getByText('lost-sales')).toBeInTheDocument();
     });
 
-    it('links the ADR-036 strategies entry to the live /strategies screen', async () => {
+    it('links the strategies entry to the live /strategies screen', async () => {
       mockApi.get.mockRejectedValue(new Error('403 Forbidden'));
       renderPage();
       await waitFor(() => screen.getByTestId('admin-strategies-fallback-note'));

@@ -7,7 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped
 /**
  * Test-only [StockSelectionFilter]. Inert (pass-through) unless [reverse] is set, so it never
  * disturbs other tests; priority()=1 sorts it first. Used to prove the core honors filter
- * *reordering* (ADR-036 conformance — previously the core re-imposed FIFO and discarded reorder).
+ * *reordering* (previously the core re-imposed FIFO and discarded reorder).
  */
 @ApplicationScoped
 class TestReorderFilter : StockSelectionFilter {

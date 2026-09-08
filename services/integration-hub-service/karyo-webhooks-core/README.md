@@ -24,7 +24,7 @@ next tick fires, the tick is skipped.
 
 ---
 
-## SPI seams (ADR-036)
+## SPI seams
 
 | SPI | Built-in | What it controls |
 |-----|----------|-----------------|

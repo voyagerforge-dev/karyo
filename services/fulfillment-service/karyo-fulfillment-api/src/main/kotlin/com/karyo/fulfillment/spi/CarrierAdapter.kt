@@ -3,7 +3,7 @@ package com.karyo.fulfillment.spi
 import java.math.BigDecimal
 
 /**
- * Strategy-SPI (ADR-036): assigns a carrier + tracking number to a shipment at manifest. v1.3 ships
+ * Strategy-SPI: assigns a carrier + tracking number to a shipment at manifest. v1.3 ships
  * only ManualCarrierAdapter (operator-supplied or generated tracking); real carrier adapters
  * (FedEx/UPS/DHL) register as beans, claim a carrier via [handles], and run at lower priority so they
  * win for their carrier while Manual stays the catch-all. [CarrierAssignment] will grow labelData (3.4b).

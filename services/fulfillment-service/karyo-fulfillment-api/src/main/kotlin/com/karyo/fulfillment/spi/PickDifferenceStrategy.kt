@@ -3,7 +3,7 @@ package com.karyo.fulfillment.spi
 import java.math.BigDecimal
 
 /**
- * Strategy-SPI (ADR-036): decides what happens to a short pick's SOURCE residual — the quantity the
+ * Strategy-SPI: decides what happens to a short pick's SOURCE residual — the quantity the
  * bin was short of. Priority-ordered, first-non-null-wins, built-in (Leave) runs last. v1.3 ships
  * only Leave (leave the stock on the bin, exclude it from the shortfall re-selection so the follow-up
  * finds other stock); future WRITE_OFF (decrement the source as a stock difference) and QUARANTINE

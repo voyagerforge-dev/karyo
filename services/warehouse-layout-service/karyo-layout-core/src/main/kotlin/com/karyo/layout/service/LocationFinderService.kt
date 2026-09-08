@@ -343,14 +343,13 @@ class LocationFinderService(
     /**
      * Resolve the [StorageStrategy] to apply, but only if it belongs to the requesting client.
      *
-     * **Resolution order (final-review closing round — the myWMS chain's middle rung):**
-     * 1. [LocationFinderRequest.storageStrategyId], if the caller supplied one explicitly.
+     * **Resolution order:**
+     * 1. [LocationFinderRequest.storageStrategyId], if supplied. Auto-putaway carries the receipt
+     *    line's validated override and persists it on the transport order for later searches.
      * 2. Else, the incoming stock's product-level default —
      *    [com.karyo.product.dto.ProductResponse.defaultStorageStrategyId] via [productLookup],
-     *    keyed off [LocationFinderRequest.itemDataId]. This is what activates strategy-driven
-     *    finder behavior (area restriction/hiding, sorts, `nearPickingLocation`, …) on the real
-     *    auto-putaway path, where `TaskService` never sets `storageStrategyId` directly (see the
-     *    final-review report).
+     *    keyed off [LocationFinderRequest.itemDataId]. This activates strategy-driven finder
+     *    behavior when no per-request or receipt-line override was supplied.
      * 3. Else `null` — **the system-default rung (myWMS's `StorageStrategyEntityService.getDefault()`,
      *    an auto-created fallback strategy) is deliberately NOT built here.** That is a bigger
      *    product decision (what an auto-created default strategy's fields should be, whether one

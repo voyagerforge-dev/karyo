@@ -111,7 +111,7 @@ class TaskService(
      * commits ([TransactionPhase.AFTER_SUCCESS]) so the unit load/stock are visible to
      * the inventory lookup, and starts its own transaction.
      *
-     * **Configuration (ADR-036):** auto-putaway-on-receipt is currently *always-on* for
+     * **Configuration:** auto-putaway-on-receipt is currently *always-on* for
      * non-QA-held lines — hardcoded by design for v1.2/v1.3, not a configurable knob.
      * Making it tunable (disable / immediate vs deferred / per-item-category) belongs on a
      * future `ReceivingStrategy` (tier-2 JSONB or an SPI); deferred to v2.x.

@@ -12,7 +12,7 @@ import java.math.BigDecimal
  * Declared here and implemented by the foreign cores, the same direction as
  * [OpenPickGuard]: inventory owns the contract, so no module gains a dependency on another
  * module's core. Implementations are discovered as CDI beans and every one is called; SPI calls
- * join the caller's transaction (ADR-037), which is what makes the move atomic.
+ * join the caller's transaction, which is what makes the move atomic.
  *
  * Every method takes [clientId] explicitly rather than reading an ambient TenantContext, per the
  * standing doctrine for cross-module reads.

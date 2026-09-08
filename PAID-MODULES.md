@@ -53,4 +53,4 @@ Splits picked goods across cartons using configured line and quantity limits. Th
 
 ## Contact the captain
 
-For commercial access, email project captain [Yashraj Padhi](mailto:yash@karyowms.com).
+For commercial access, email project captain [Yash](mailto:yash@karyowms.com).

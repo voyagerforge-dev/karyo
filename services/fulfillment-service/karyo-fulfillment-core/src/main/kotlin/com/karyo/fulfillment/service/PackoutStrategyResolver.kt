@@ -9,8 +9,8 @@ import jakarta.enterprise.inject.Instance
 /**
  * Resolves the active [PackoutStrategy]. Prefers a strategy whose [PackoutStrategy.name] matches the
  * order's `packoutStrategy` knob; otherwise walks ascending priority and takes the first non-null
- * result (built-in OneToOne, priority MAX_VALUE, always answers). v1.3 has only the built-in; future
- * strategies register as beans + claim a name.
+ * result (built-in OneToOne, priority MAX_VALUE, always answers). Additional strategies register
+ * as beans and claim a name.
  *
  * **Contract for a null-returning named strategy (outbound-completion sprint, Task 3):** a strategy
  * whose [PackoutStrategy.name] matches the knob but whose `pack()` returns null (e.g. a

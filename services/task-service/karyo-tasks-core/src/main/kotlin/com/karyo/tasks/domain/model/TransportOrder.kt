@@ -17,7 +17,7 @@ import java.time.Instant
  * Location/unit-load references are id+denormalized-name (no cross-module FKs).
  *
  * [executorType] is fixed to HUMAN in v1.2; the column exists so WCS/equipment routing
- * (ADR-034, v2.x) can populate it without a schema churn. [locationReservationId]
+ * (not currently implemented) could populate it without a schema churn. [locationReservationId]
  * (unused as a stored FK — the layout module keys its reservation by transportOrderId)
  * is retained as a breadcrumb of the soft reservation held while the task is open.
  */

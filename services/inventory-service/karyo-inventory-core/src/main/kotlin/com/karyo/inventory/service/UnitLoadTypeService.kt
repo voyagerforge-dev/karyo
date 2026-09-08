@@ -58,7 +58,7 @@ class UnitLoadTypeService(
 
     /**
      * Full-representation update. Carries [CacheInvalidateAll] for the same reason create and
-     * delete do: findAll is cached for 60 minutes (ADR-013), so a mutation that skipped this
+     * delete do: findAll is cached for 60 minutes, so a mutation that skipped this
      * would serve a stale type for an hour. That was defect B22; do not remove this annotation.
      *
      * Row :1411 (defect-burndown-5): a tare change on a type is invisible to every unit load

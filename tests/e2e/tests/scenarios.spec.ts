@@ -275,7 +275,7 @@ test.describe("v1.3 acceptance scenarios", () => {
     expect(line.state).toBe(PENDING);
   });
 
-  test("8. Order strategy (ADR-036) round-trip", async ({ authenticatedPage: page }) => {
+  test("8. Order strategy round-trip", async ({ authenticatedPage: page }) => {
     const h: Headers = { Authorization: await captureAuthHeader(page) };
 
     const strategy = await post<{

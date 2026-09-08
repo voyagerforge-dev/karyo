@@ -1,7 +1,7 @@
 package com.karyo.inventory.api.spi
 
 /**
- * In-process cross-module READ contract, like [StockUnitLookup] — NOT an ADR-036 strategy
+ * In-process cross-module READ contract, like [StockUnitLookup] — NOT a strategy
  * seam. Declared here in inventory-api and implemented by the fulfillment module (the
  * reverse direction of [StockPicker]): inventory asks the question, fulfillment owns the
  * pick lifecycle that answers it.

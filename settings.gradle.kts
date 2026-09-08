@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-// Shared infrastructure libraries (per ADR-028)
+// Shared infrastructure libraries
 include(
     ":libs:karyo-common",
     ":libs:karyo-events",

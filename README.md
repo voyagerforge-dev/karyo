@@ -1,73 +1,118 @@
 # Karyo WMS
 
-Karyo is a self-hosted warehouse management system for receiving, inventory, putaway, picking,
-packing, shipping, replenishment, and stocktaking. It runs as one Quarkus modular monolith with
-PostgreSQL and Keycloak, plus React interfaces for warehouse planners and floor operators.
+**Know what arrived, where it is, and what needs to ship.**
 
-## Public repository and license
+Karyo is a self-hosted warehouse management system for warehouse teams and the developers who
+support them. It connects receiving, stock locations and floor work with picking, packing and
+shipping, through a desktop console and a mobile progressive web app (PWA).
 
-All source in this public repository is licensed under [Apache-2.0](LICENSE). It contains the
-complete free application, public extension contracts, tests, both user interfaces, and the
-four-container deployment path.
+## See it in practice
 
-Karyo uses an open-core model. Every public `*-api` module remains Apache-2.0, including the API
-contracts for commercial engines. The corresponding commercial `*-core` implementations are not
-included in this repository. You may build your own extended free image using the
-[implementer guide](docs/guides/implementer-guide.md). Extensions are included during Quarkus
-build-time augmentation, not uploaded to a running application.
+![Karyo inventory walkthrough: find a synthetic product, inspect its stock and location, then return to the inventory list.](docs/media/inventory-walkthrough.gif)
 
-Commercial combined images are a separate vendor-delivered product. The signed-licence delivery
-design uses short-lived download URLs, with no registry account or second customer identity.
-Confirm availability before relying on that service: live commercial delivery is not yet proven.
-Commercial source and private build inputs are not distributed. See
-[Commercial engines](PAID-MODULES.md) for prerequisites, limits and the contact route.
+[Static screenshot](docs/media/inventory-walkthrough.png) - no animation.
+In this synthetic example, an operator searches inventory, opens a stock record to inspect its
+quantity, lot and unit-load location, then returns to the list. For the connected receiving-to-shipping
+journey, follow the [written walkthrough](docs/guides/implementer-guide.md#first-inbound-and-outbound-flow).
 
-## Lineage
+## Why Karyo exists
 
-Karyo's functional ancestor is **myWMS**, the GPL-3.0 open-source Java EE warehouse management
-system. Karyo is not a port or a translation of myWMS.
+Warehouse teams need answers to practical questions: Did the expected goods arrive? Which stock
+is available rather than reserved or on hold? Where should it go? What should an operator pick
+next? Spreadsheets and disconnected tools make those answers difficult to keep consistent as
+receipts, movements and orders change.
 
-Karyo retains familiar warehouse concepts while it
-deliberately diverges in architecture, user experience, deployment, extension boundaries, and
-selected workflow defaults.
+Karyo exists to make capable warehouse software more accessible and understandable. Modern
+open-source databases, application frameworks and browser tooling make excellent technology
+available without building everything from scratch. Useful technology does not have to start
+with expensive licences or unnecessary infrastructure. Our aim is to reduce avoidable complexity
+and cost, not to promise zero-cost operation: hosting, devices, integration, training, backups
+and support still matter.
 
-## Build from a clean clone
+### Simple where it helps, explicit where it matters
 
-Install a JDK 21 compiler, Node.js 22, and Docker or Podman. Use the checked-in Gradle wrapper, not
-a separately installed Gradle release:
+**KISS (Keep It Simple, Stupid)** means choosing the clearest design that does the job, not ignoring
+warehouse complexity. **YAGNI (You Aren't Gonna Need It)** means adding machinery for a demonstrated
+need, rather than a hypothetical future one. In Karyo today:
+
+- **One application, clear modules.** Quarkus assembles the backend into one process using one
+  PostgreSQL application schema. Internal calls use typed interfaces and in-process events,
+  without network hops between warehouse modules. Modules still have contracts and boundaries;
+  they deploy together rather than scaling independently.
+- **A practical deployment.** Compose runs the application, PostgreSQL, Keycloak and nginx.
+  Desktop and floor interfaces share the backend. There is no required Kubernetes cluster,
+  Kafka broker or Redis service. Four containers and two interfaces still need real operations.
+- **Ordinary state, purposeful events.** Database records hold current warehouse state; an
+  inventory journal tracks movements and an active outbox supports webhook delivery. There is
+  no event-replay system to operate just to find stock. Transactions and retries still need care.
+- **Optional means optional.** The free warehouse works without an AI provider or commercial
+  engine. Add extensions for an actual requirement through existing APIs at build time, rather
+  than a runtime plugin platform. Rebuilding is the tradeoff for that simpler deployment boundary.
+
+See the [current architecture](https://github.com/voyagerforge-dev/karyo/wiki/Technical-Architecture-Overview)
+and [extension contracts](docs/architecture/extensibility-architecture.md) for details and limits.
+
+## What you can do
+
+The free application includes products and warehouse layout, receiving and quality holds,
+inventory and putaway, delivery orders, discrete picking, packing/shipping, replenishment,
+stocktaking, work allocation, goods-owner/user administration, reporting, webhooks and a document
+archive. It suits teams evaluating a self-hosted WMS and implementers willing to configure and
+verify it for their warehouse, not an unconfigured drop-in replacement for every operation.
+
+**Open core, with an explicit boundary:** all Karyo source here, including public extension APIs,
+is [Apache-2.0](LICENSE). Nine optional commercial engines are not included. Ordinary document
+generation and one-to-one pack-out remain free. [Commercial engines](PAID-MODULES.md) owns the
+capability list, prerequisites, limitations and contact route. Confirm commercial delivery
+availability there before relying on it; a licence token cannot install absent engine code.
+
+## Get started
+
+To build the backend from source, install a **JDK 21 compiler**, set `JAVA_HOME`, and use the
+checked-in wrapper:
 
 ```bash
-./gradlew :services:karyo-app:quarkusBuild -x test
-./gradlew :services:karyo-app:test --tests "com.karyo.common.PatchableTest"
+git clone https://github.com/voyagerforge-dev/karyo.git
+cd karyo
+./gradlew :services:karyo-app:quarkusBuild
 ```
 
-The [developer onboarding guide](docs/guides/developer-onboarding.md) covers prerequisites,
-container-backed tests, frontend builds, local development, free-tier deployment, and extension
-development. For a production installation, continue with [DEPLOY.md](DEPLOY.md).
+That builds the backend, not a running warehouse. For a complete installation you also need
+Node.js 22.12+, Python 3, and Docker with Compose or Podman with podman-compose:
+
+1. Follow [DEPLOY](DEPLOY.md#quick-start) to configure the exact browser origin and independent
+   secrets, build the four-container stack and establish the first administrator. Production
+   has no default human login. Use an isolated target and synthetic data first.
+2. Follow the [implementer guide](docs/guides/implementer-guide.md) to configure a warehouse and
+   verify receiving, putaway, picking and shipping before using real stock.
+3. Developing locally or running tests? Use [developer onboarding](docs/guides/developer-onboarding.md).
+   Extending the free application? Start with the [executable example](docs/guides/implementer-guide.md#extend-the-free-application).
 
 ## Documentation
 
-Start with the [implementer guide](docs/guides/implementer-guide.md): installation, warehouse
-setup, inbound/outbound operation, floor work, extension augmentation and operations. It describes
-the current four-container application. The requirements register and ADR collection remain
-available for context, including historical decisions; they are not all current deployment recipes.
-
+- [Product and workflow wiki](https://github.com/voyagerforge-dev/karyo/wiki)
 - [Requirements register](docs/REQUIREMENTS.md)
-- [Functional stock selection](docs/functional/stock-selection.md)
-- [Functional location finding](docs/functional/location-finder.md)
-- [Functional picking](docs/functional/picking.md)
-- [API standards](docs/architecture/api-standards.md)
-- [Webhook event catalog](docs/integration/webhook-event-catalog.md)
-- [Architecture decision records](docs/architecture/decisions/README.md)
-- [Extensibility architecture](docs/architecture/extensibility-architecture.md)
+- [Stock selection](docs/functional/stock-selection.md), [location finding](docs/functional/location-finder.md)
+  and [picking](docs/functional/picking.md)
+- [API standards](docs/architecture/api-standards.md) and [webhook event catalog](docs/integration/webhook-event-catalog.md)
+- [Operations, backups and upgrades](DEPLOY.md)
 
-## Issues and contributions
+## Help, issues and contributions
 
-Issues are welcome for reproducible bugs, documentation problems, and feature requests.
+[Issues](https://github.com/voyagerforge-dev/karyo/issues) are welcome for reproducible bugs,
+documentation problems and feature requests. Describe the warehouse problem and include sanitized
+reproduction steps. See [CONTRIBUTING](CONTRIBUTING.md) for the reporting and extension routes.
+**External pull requests are not accepted:** this is a generated distribution. The first release
+has one root commit; each later release adds one generated commit and matching tag without
+rewriting earlier history. Forks and independent changes are permitted under Apache-2.0.
 
-Pull requests are not accepted because this repository is generated from Karyo's working
-repository. The first release has one root commit; each later release adds one generated commit
-and matching tag without rewriting earlier history. Each release regenerates the source tree,
-so changes made only here would be overwritten. Apache-2.0 permits you to fork the public tree
-and maintain your own changes; use an issue when you want a change considered for a future
-generated release.
+**Security problems:** report vulnerabilities privately through [SECURITY.md](SECURITY.md), not
+in a public issue. Never attach credentials, licence tokens or customer records to a report.
+
+## Licence and lineage
+
+See [LICENSE](LICENSE), [NOTICE](NOTICE) and [third-party notices](THIRD-PARTY-NOTICES.md) for
+licensing and attribution. Karyo's functional ancestor is **myWMS**, the GPL-3.0 Java EE warehouse
+management system. Karyo is not a port or translation of myWMS: it retains familiar warehouse
+concepts while diverging in architecture, user experience, deployment, extensions and selected
+workflow defaults.

@@ -21,8 +21,9 @@
 
 ## 1. Observability Strategy
 
-Karyo WMS runs as a **single modular-monolith process** (`karyo-app`) since the June 2026 pivot
-([ADR-037](decisions/ADR-037-modular-monolith.md)). This document describes what that process
+Karyo WMS runs as a **single modular-monolith process** (`karyo-app`), as described in the
+[current architecture](https://github.com/voyagerforge-dev/karyo/wiki/Technical-Architecture-Overview).
+This document describes what that process
 actually emits today and draws a hard line between two very different things:
 
 - **Instrumented in the app** — code paths exist, extensions are on the classpath, data is
@@ -306,5 +307,5 @@ Prometheus/Loki instance to point it at.
 ## Related Documents
 
 - [API Standards](api-standards.md)
-- [ADR-019: OAuth2/OIDC with Keycloak](decisions/ADR-019-oauth2-oidc-with-keycloak.md)
-- [ADR-037: Modular Monolith](decisions/ADR-037-modular-monolith.md)
+- [Deployment and identity setup](../../DEPLOY.md)
+- [Current architecture](https://github.com/voyagerforge-dev/karyo/wiki/Technical-Architecture-Overview)

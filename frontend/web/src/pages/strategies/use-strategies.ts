@@ -12,7 +12,7 @@ import type {
 // ----- Order strategies (system-level) -----
 // The read hook's canonical home is the orders feature (order-form's strategy picker
 // already uses it). Re-export it here so there is ONE ['order-strategies'] query
-// definition/staleTime rather than two competing for the same cache key (ADR-036 review).
+// definition/staleTime rather than two competing for the same cache key.
 export { useOrderStrategies } from '@/pages/orders/use-orders';
 
 function useInvalidateOrderStrategies() {

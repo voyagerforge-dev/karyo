@@ -10,7 +10,7 @@ import jakarta.enterprise.inject.Instance
  * Resolves the active [PickOrderGroupingStrategy]: walks all beans in ascending priority and uses
  * the first non-null group() result (built-in Discrete, priority MAX_VALUE, runs last and always
  * answers). v1.3 has only the built-in; custom strategies register as CDI beans and win by priority.
- * Mirrors the ADR-036 resolver idiom established by OrderStrategyService.resolve().
+ * Mirrors the resolver idiom established by OrderStrategyService.resolve().
  */
 @ApplicationScoped
 class PickOrderGroupingResolver(

@@ -172,7 +172,7 @@ Passes 1–5: no unlocked unit covers 80 → nothing. Pass 6: S7 → pick 50, re
 ## 7. Extension Points
 
 - **`StockSelectionFilter` SPI** (in `karyo-inventory-api`) — the supported way to inject custom allocation policy. The filter chain runs on **every pass**: each filter receives the pass's candidate stock-unit IDs plus the full request and returns the subset to keep. Filters are CDI beans discovered from any JAR on the classpath, ordered by `priority()` ascending (lower runs first; default 1000). Deploy in a client extension JAR compiled against the `api` module only, annotated `@Alternative @Priority(...)`.
-  - **Filter *and* re-rank (since the ADR-036 conformance pass, 2026-06-13):** the core now returns survivors **in the order the filter chain produced**, so a filter can both veto and re-rank candidates — matching layout's `LocationFilter` and the SPI contract. (Previously the core re-imposed the original FIFO order, discarding any reordering; that divergence is closed.)
+  - **Filter *and* re-rank (since the filter-order correction, 2026-06-13):** the core now returns survivors **in the order the filter chain produced**, so a filter can both veto and re-rank candidates — matching layout's `LocationFilter` and the SPI contract. (Previously the core re-imposed the original FIFO order, discarding any reordering; that divergence is closed.)
   - **Executable example:** the [implementer cookbook](../guides/implementer-guide.md#extend-the-free-application) owns build-time installation and behavior/safety proof.
 - **`JournalEnricher` SPI** — not part of selection itself, but adjacent: enriches `InventoryJournal` audit entries (every reserve/transfer that *follows* a selection) with custom fields.
 - **Inactive-product projection** — extension-relevant indirectly: any module/extension that changes product lifecycle state must fire `ItemDataStateChangedEvent` for selection to respect it (§2.1).
@@ -206,6 +206,6 @@ Passes 1–5: no unlocked unit covers 80 → nothing. Pass 6: S7 → pick 50, re
 | 6 | Lot is preference-with-fallback by default; **strict lot now available via `enforceLot`** | Resolved (v1.3 3.1) — `enforceLot` is the strict-lot flag; default stays preference-with-fallback (Example C) |
 | 7 | Passes are now genuinely distinct on the *strategy* dimensions (strict vs relaxed complete validation, preferMatching, completeHandling) | **Fixed** (v1.3 3.1) for strategy passes; the **location** passes (#3) remain deferred to Spec B |
 | 8 | Multi-pick accumulation in one call vs. myWMS one-stock-per-call iteration | Intentional API improvement |
-| 9 | ~~SPI filter reordering is discarded (FIFO order always re-imposed)~~ | **Fixed** 2026-06-13 (ADR-036 pass) — filter order is now honored |
+| 9 | ~~SPI filter reordering is discarded (FIFO order always re-imposed)~~ | **Fixed** 2026-06-13 (filter-order correction) — filter order is now honored |
 | 10 | Inactive-product exclusion via event-maintained projection | Karyo addition (replaces cross-service lookup) |
 | 11 | Partial fulfillment returned with `fullyFulfilled=false` instead of null/failure | Intentional API improvement |

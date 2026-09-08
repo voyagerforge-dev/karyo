@@ -17,9 +17,9 @@ import java.time.LocalDate
  * One received line — the audit record linking a receipt to the stock it created.
  * Owned by [GoodsReceipt] (cascade ALL, orphanRemoval).
  *
- * stockUnitId/unitLoadId are ID-only references into the inventory module
- * (ADR-004). locationId/locationName are passed by the caller — v1.2 performs no
- * cross-module location validation (sub-phase 2.3's LocationLookup will add it).
+ * stockUnitId/unitLoadId are ID-only references into the inventory module.
+ * locationId/locationName preserve caller-supplied receipt context; [com.karyo.inventory.api.spi.StockReceiver.receive]
+ * owns unit-load creation or reuse, not [com.karyo.orders.service.ReceiveLineValidator].
  */
 @Entity
 @Table(name = "goods_receipt_lines")
@@ -101,8 +101,8 @@ class GoodsReceiptLine : BaseEntity() {
 
     /**
      * V425 (inbound-completion row 7 residual): an optional per-line override of the putaway
-     * location finder's `StorageStrategy` — ID-only reference into the layout module, no FK
-     * (ADR-004). Validated at receive time (unknown/foreign → 422, see [ReceiveLineValidator]);
+     * location finder's `StorageStrategy`: ID-only reference into the layout module, no FK.
+     * Validated at receive time (unknown/foreign -> 422, see [com.karyo.orders.service.ReceiveLineValidator]);
      * carried onto [com.karyo.orders.event.GoodsReceiptLineReceivedEvent] and PERSISTED on the
      * auto-created putaway `TransportOrder` so the re-resolve-on-start path can replay it.
      */

@@ -12,7 +12,7 @@ import java.io.Serializable
  * several ASNs (one truck, several supplier shipments) and, in principle, one ASN
  * may be received across several receipts. Deliberately a plain ID-pair entity, not
  * a [jakarta.persistence.ManyToMany] mapping -- the codebase's convention of explicit
- * join entities / ID-sets over implicit collection mappings (ADR-004's cross-aggregate
+ * join entities / ID-sets over implicit collection mappings (cross-aggregate
  * ID-only style, kept here even though both sides live in the same `orders` module,
  * because [GoodsReceipt] and [Asn] are independent aggregates with their own lifecycles).
  *

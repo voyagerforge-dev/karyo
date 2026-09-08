@@ -11,7 +11,7 @@ package com.karyo.auth.spi
  * authority). Deliberately unscoped, like [ClientLookup.exists]: callers pass the domain
  * row's own `client_id`, and production call sites are already tenant-guarded.
  *
- * This is a cross-module read contract, not an ADR-036 strategy seam: there is no plausible
+ * This is a cross-module read contract, not a strategy seam: there is no plausible
  * second implementation, and none should be added.
  */
 interface RuntimePropertyLookup {

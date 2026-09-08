@@ -56,14 +56,9 @@ class ItemData : TenantEntity() {
     var defaultUnitLoadTypeId: Long? = null
 
     /**
-     * Per-product preferred putaway [com.karyo.layout] StorageStrategy (ID-only cross-module
-     * ref). **Consumed as of the locations-layout sprint's closing round:**
-     * `LocationFinderService.resolveStrategy` falls back to this value (via `ProductLookup`)
-     * when the caller's `LocationFinderRequest.storageStrategyId` is null — the middle rung of
-     * myWMS's `goodsReceiptLine override -> ItemData.defaultStorageStrategy -> system default`
-     * chain. The GR-line override (top rung) and the system-default rung (bottom) remain
-     * unimplemented — see the WORKLIST resolver row. Do not remove; it is the binding input
-     * for product-driven putaway. (ADR-036 audit)
+     * Per-product preferred putaway StorageStrategy (ID-only cross-module reference).
+     * `LocationFinderService.resolveStrategy` owns precedence and owner validation. This value
+     * is exposed through `ProductLookup` as its product-driven fallback, not a cross-core edge.
      */
     @Column(name = "default_storage_strategy_id")
     var defaultStorageStrategyId: Long? = null

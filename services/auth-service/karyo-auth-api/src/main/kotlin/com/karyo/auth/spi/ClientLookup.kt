@@ -4,7 +4,7 @@ package com.karyo.auth.spi
  * In-process goods-owner lookup, consumed by other modules instead of a cross-module
  * repository dependency. Mirrors `ProductLookup` / `ShipmentLookup`.
  *
- * This is a cross-module read contract, not an ADR-036 strategy seam: there is no plausible
+ * This is a cross-module read contract, not a strategy seam: there is no plausible
  * second implementation, and none should be added.
  */
 interface ClientLookup {

@@ -309,5 +309,4 @@ All links in this section are part of the public repository:
 - Integration events, signatures, and retries: [webhook event catalog](../integration/webhook-event-catalog.md)
 - Deployment: [production deployment](../../DEPLOY.md) and
   [cloud deployment](cloud-deployment-guide.md)
-- Architectural decisions: [ADR index](../architecture/decisions/README.md) and
-  [ADR-037: Modular Monolith](../architecture/decisions/ADR-037-modular-monolith.md)
+- [Current architecture](https://github.com/voyagerforge-dev/karyo/wiki/Technical-Architecture-Overview): runtime, requests and module boundaries

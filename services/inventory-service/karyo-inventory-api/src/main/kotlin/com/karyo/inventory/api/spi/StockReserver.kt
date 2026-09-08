@@ -4,7 +4,7 @@ import java.math.BigDecimal
 
 /**
  * Inputs for a stock reservation — mirrors the selection knobs so the caller (orders) drives
- * completeHandling/preferMatching/enforceLot/lot through reservation (ADR-036 strategy flow).
+ * completeHandling/preferMatching/enforceLot/lot through reservation (strategy flow).
  */
 data class ReservationRequest(
     val itemDataId: Long,

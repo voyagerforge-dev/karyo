@@ -13,7 +13,7 @@ import java.math.BigDecimal
 /**
  * One order line. Owned by [DeliveryOrder] (cascade ALL, orphanRemoval).
  * itemDataNumber is denormalized from the product module at creation time
- * (ID-only cross-module reference per ADR-004).
+ * (ID-only cross-module reference).
  */
 @Entity
 @Table(name = "delivery_order_lines")

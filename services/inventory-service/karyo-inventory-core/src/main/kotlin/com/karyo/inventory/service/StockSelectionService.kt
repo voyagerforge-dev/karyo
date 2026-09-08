@@ -180,7 +180,7 @@ class StockSelectionService(
      * Applies the SPI filter chain (sorted by priority ascending) to the candidate stock
      * unit IDs, then returns the survivors **in the order the chain produced** — filters may
      * prune *and re-rank* candidates ([StockSelectionFilter] honors reorder, matching
-     * layout's `LocationFilter`; ADR-036 Strategy-SPI / filter convention). IDs the chain
+     * layout's `LocationFilter`; Strategy-SPI / filter convention). IDs the chain
      * returns that are not in the candidate set are dropped.
      */
     private fun applyFilters(candidates: List<StockUnit>, request: StockSelectionRequest): List<StockUnit> {

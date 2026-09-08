@@ -243,7 +243,7 @@ class ProductService(
     /**
      * Deletes a product and its owned children (barcodes, packaging units) in one transaction.
      * Owned children cascade via JPA (CascadeType.ALL + orphanRemoval). Cross-module references
-     * (e.g. stock units in the inventory module) are ID-only per ADR-004 — no FK enforcement here.
+     * (e.g. stock units in the inventory module) are ID-only cross-module references, with no FK enforcement here.
      */
     @Transactional
     fun deleteProduct(id: Long, clientId: Long) {

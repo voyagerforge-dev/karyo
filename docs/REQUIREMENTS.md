@@ -3,7 +3,7 @@
 > **Post-pivot note (2026-07-19).** Entries below are a historical record of work as it was
 > completed. Some describe mechanisms the June 2026 pivot replaced — Kafka audit events, "all 4 services",
 > the Keycloak Kafka SPI. Those items were genuinely delivered at the time; they are not current
-> architecture. See [ADR-037](architecture/decisions/ADR-037-modular-monolith.md).
+> architecture. See the [current architecture](https://github.com/voyagerforge-dev/karyo/wiki/Technical-Architecture-Overview).
 
 
 **Core Value:** A potential customer can try the system themselves — clicking through a
@@ -19,7 +19,7 @@ with real data moving through real services.
 
 | Original requirement family | Current disposition / evidence owner |
 |---|---|
-| INFRA-02, AUTH-06, TEST-01/02/06 | No Kafka runtime or companion dependency. CDI handles internal notifications; outbox feeds the active webhook relay. Authentication audit polls Keycloak. See [ADR index](architecture/decisions/README.md). |
+| INFRA-02, AUTH-06, TEST-01/02/06 | No Kafka runtime or companion dependency. CDI handles internal notifications; outbox feeds the active webhook relay. Authentication audit polls Keycloak. See the [webhook catalog](integration/webhook-event-catalog.md). |
 | AUTH-03/04, DASH-01 | Silo instance with goods-owner scope, not a login tenant picker or every query hard-bound to one claim. OPS and OWNER have distinct scopes; roles are independent. See [DEPLOY](../DEPLOY.md). |
 | DASH-10 | Guided tour retired; optional synthetic demo generator is not a production prerequisite. |
 | DEPLOY/CLOUD/IDEMPOTENT | One application, four Compose containers; current flags, ports, memory settings, bootstrap and maintenance are owned by [DEPLOY](../DEPLOY.md), not the historical row values. |
@@ -147,7 +147,7 @@ It is not today's product exclusion list.
 | Full ERP integration | Customer-specific, needs their test environment |
 | Full reporting/analytics suite | Pre-built KPIs + CSV export later |
 | Zone optimization / AI slotting | Needs months of historical data |
-| Custom workflow engine / BPMN | ADR-010 chose choreography sagas |
+| Custom workflow engine / BPMN | Current workflows use services and CDI events, not a general-purpose workflow engine |
 | Multi-language i18n | English-only for demo |
 | Offline-first web dashboard | Edge/mobile concern, not web |
 | Natural language search | Requires AI service (Phase 3) |

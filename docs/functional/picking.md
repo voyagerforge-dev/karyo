@@ -91,7 +91,7 @@ Follow-up recovery picks are confirmed through the **same** `/picks/{id}/confirm
 
 ## 3. Short-Pick Recovery
 
-A confirm where `pickedAmount < plannedAmount` is **accepted**, not an error. The picked portion lands on the container; the shortfall is recovered through `handleShortfall(...)`, governed by **three pluggable knobs** resolved per order via `OrderStrategyLookup.findPickingStrategy(orderId)` (`PickingStrategyView`). All three are ADR-036 strategy seams.
+A confirm where `pickedAmount < plannedAmount` is **accepted**, not an error. The picked portion lands on the container; the shortfall is recovered through `handleShortfall(...)`, governed by **three pluggable knobs** resolved per order via `OrderStrategyLookup.findPickingStrategy(orderId)` (`PickingStrategyView`). All three are pluggable strategy seams.
 
 ### 3.1 The three knobs
 
@@ -206,9 +206,9 @@ Same short of **10**, no other WIDGET stock and no substitute. Both cover attemp
 
 ## 7. SPI Seams (Extension Points)
 
-**Picking-domain seams** (in `karyo-fulfillment-api`), all ADR-036 strategy-SPIs resolved by a priority-ordered, first-non-null / name-matched resolver with a built-in registered at `Int.MAX_VALUE` (runs last, always answers):
+**Picking-domain seams** (in `karyo-fulfillment-api`), strategy-SPIs resolved by a priority-ordered, first-non-null / name-matched resolver with a built-in registered at `Int.MAX_VALUE` (runs last, always answers):
 
-- **`PickOrderGroupingStrategy`** — decides how a released order's reserved work is grouped/sequenced into PickOrders. Built-in `DiscreteGroupingStrategy` yields one group per order. Resolver `PickOrderGroupingResolver` (ascending priority, first non-null). **This is the same seam ADR-035 designs for wave-based fulfillment** — batch / cluster / zone / wave grouping compose here later *without a PickOrder refactor*.
+- **`PickOrderGroupingStrategy`** — decides how a released order's reserved work is grouped/sequenced into PickOrders. Built-in `DiscreteGroupingStrategy` yields one group per order. Resolver `PickOrderGroupingResolver` (ascending priority, first non-null). Custom grouping implementations can use this seam. Cross-order batching has a separate `BatchPickPort`; the free default here remains discrete picking.
 - **`PickDifferenceStrategy`** — what happens to a short pick's source residual. Built-in `LeaveDifferenceStrategy` (`LEAVE`) excludes the source from re-selection. Future `WRITE_OFF` (decrement the source as a stock difference) / `QUARANTINE` (lock the residual for recount) register as beans and win by name/priority.
 - **`ShortfallStrategy`** — the terminal handler for an uncovered remainder. Built-in `PartialShipShortfallStrategy` (`PARTIAL_SHIP`) reports + accepts. Future `PENDING_ESCALATION` / auto-recovery register as beans.
 

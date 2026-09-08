@@ -3,7 +3,7 @@ package com.karyo.fulfillment.spi
 import java.math.BigDecimal
 
 /**
- * Strategy-SPI (ADR-036): decides what happens to a short pick's *uncovered* remainder (after the
+ * Strategy-SPI: decides what happens to a short pick's *uncovered* remainder (after the
  * shortPickMode cover-attempt). Priority-ordered, first-non-null-wins, built-in (PartialShip) runs
  * last. v1.3 ships only PartialShip (accept + report); PENDING-escalation and auto-recovery are
  * future strategies that register as beans and win by priority / the shortfallStrategy knob.

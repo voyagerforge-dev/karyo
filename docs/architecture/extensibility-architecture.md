@@ -60,9 +60,9 @@ copy one selection rule across every SPI.
 | `PackoutStrategy`, `CarrierAdapter`, `PickOrderGroupingStrategy` | Consult each resolver and key/name contract | Named strategies are not a universal priority chain |
 | `WebhookSigner`, `DeliveryRetryPolicy` | Direct CDI injection | Override using CDI selection; neither interface declares `priority()` |
 
-[ADR-036](decisions/ADR-036-strategy-driven-configuration.md) owns configuration intent. Its
-priority/first-non-null convention describes that family of strategy SPIs, not every interface
-in the app. See the registry and the interface's own KDoc before implementing an override.
+The priority/first-non-null convention describes one family of strategy SPIs, not every
+interface in the app. The table above records the current selection rules. See the registry
+and the interface's own KDoc before implementing an override.
 
 ## 2. Domain event hooks
 
@@ -91,7 +91,7 @@ core if that would force consumers to depend on its implementation.
 configuration. A property has an effect only if code reads it. Namespacing customer keys avoids
 collisions; inventing a field in JSON does not implement a behavior.
 
-Stable typed fields, strategy JSONB keys and CDI strategies are distinct choices under ADR-036.
+Stable typed fields, strategy JSONB keys and CDI strategies are distinct configuration choices.
 The runtime `system_properties` ladder is another existing mechanism: client row, SYS fallback,
 MicroProfile configuration, catalog default. That means a DB setting can intentionally override
 an environment value. See `SystemPropertyCatalog` and `RuntimePropertyLookup` for actual keys.
@@ -128,8 +128,7 @@ The checked-out module graph and release version govern source builds.
 
 ## Versioning and patch safety
 
-[ADR-030](decisions/ADR-030-conventional-commits-semver.md) records SemVer intent. Removing or
-changing a published signature is a compatibility change; additive defaulted members aim to retain
+Removing or changing a published signature is a compatibility change; additive defaulted members aim to retain
 compatibility. Recompile and test extensions against the target release: Kotlin/JVM binary
 compatibility is not guaranteed merely by a method having a default body or an event adding a
 field. Core patches must preserve the public contract, but "never breaks an extension" is not

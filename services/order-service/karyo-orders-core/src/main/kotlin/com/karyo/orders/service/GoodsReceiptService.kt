@@ -293,7 +293,7 @@ class GoodsReceiptService(
      * On a RETOUR receipt an omitted lockType defaults to QUALITY_FAULT — see
      * [resolveLineLockType].
      *
-     * **Configuration (ADR-036):** `lockType` is deliberately a *per-request* input (the
+     * **Configuration:** `lockType` is deliberately a *per-request* input (the
      * caller/operator decides per line), not a strategy-entity gap. `allowOverReceipt` is
      * now a TWO-LEVEL composition (inbound-completion row 10): the per-request flag is
      * still honored, but only when the instance-level `karyo.receiving.allow-over-receipt`

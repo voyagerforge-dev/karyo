@@ -45,7 +45,7 @@ import java.time.Instant
  * **Documented deviations of the cross-order BATCH path from the discrete path (reviewer-flagged,
  * intentional, not gaps):**
  * - [persistBatchPickOrders] never calls [PickOrderGroupingResolver]`.resolve` -- grouping
- *   strategies (ADR-036) decide how ONE order's reserved work is split; a batch PickOrder is
+ *   strategies decide how ONE order's reserved work is split; a batch PickOrder is
  *   already the wave's OWN cross-order grouping decision (by [PickZoneLookup] zone), a different
  *   axis entirely, not a second layer on top of the per-order strategy chain.
  * - [persistBatchPickOrders] never fires [com.karyo.fulfillment.event.PickingOrderPrepareEvent]

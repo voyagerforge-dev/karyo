@@ -3,7 +3,7 @@ package com.karyo.product.spi
 import com.karyo.product.dto.ProductResponse
 
 /**
- * Strategy SPI (ADR-036 convention): resolvers are consulted in ascending [priority];
+ * Strategy SPI: resolvers are consulted in ascending [priority];
  * [supports] gates which barcodes a resolver handles, and the **first non-null** [resolve]
  * wins. The built-in resolver registers at [DEFAULT_PRIORITY] (runs last), so a custom
  * resolver at a lower value pre-empts it. Returning null = "I can't resolve this, fall

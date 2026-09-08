@@ -14,7 +14,7 @@ export interface BarcodeScanner {
   decode(video: HTMLVideoElement): Promise<string | null>
 }
 
-/** Barcode Detection API format identifiers (ADR-027's 1D-label + 2D set). */
+/** Barcode Detection API format identifiers for supported 1D and 2D labels. */
 export const SCAN_FORMATS = ['code_128', 'ean_13', 'ean_8', 'code_39', 'qr_code', 'data_matrix'] as const
 
 /** zxing-wasm format identifiers, parallel to SCAN_FORMATS. */

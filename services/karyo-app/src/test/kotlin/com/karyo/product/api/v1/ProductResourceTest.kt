@@ -283,7 +283,7 @@ class ProductResourceTest {
     @OidcSecurity(claims = [Claim(key = "client_id", value = "1"), Claim(key = "tenant_code", value = "ACME")])
     fun `can lookup product by barcode - 200`() {
         // ProductResource consults the BarcodeResolver SPI chain: supports() gate then resolve()
-        // (ADR-036). The real DefaultBarcodeResolver supports all barcodes; stub the mock to match.
+        // The real DefaultBarcodeResolver supports all barcodes; stub the mock to match.
         doReturn(true).`when`(barcodeResolver).supports("EAN-123")
         doReturn(sampleProduct()).`when`(barcodeResolver).resolve("EAN-123", 1L)
 

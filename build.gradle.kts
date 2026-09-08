@@ -27,7 +27,7 @@ if (gradleTestContract["require_junit_platform"] != true) {
 
 allprojects {
     group = "com.karyo"
-    version = "2.0.0"
+    version = "2.0.1"
 
     repositories {
         mavenCentral()
