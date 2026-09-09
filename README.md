@@ -6,14 +6,10 @@ Karyo is a self-hosted warehouse management system for warehouse teams and the d
 support them. It connects receiving, stock locations and floor work with picking, packing and
 shipping, through a desktop console and a mobile progressive web app (PWA).
 
-## See it in practice
 
 ![Karyo inventory walkthrough: find a synthetic product, inspect its stock and location, then return to the inventory list.](docs/media/inventory-walkthrough.gif)
 
-[Static screenshot](docs/media/inventory-walkthrough.png) - no animation.
-In this synthetic example, an operator searches inventory, opens a stock record to inspect its
-quantity, lot and unit-load location, then returns to the list. For the connected receiving-to-shipping
-journey, follow the [written walkthrough](docs/guides/implementer-guide.md#first-inbound-and-outbound-flow).
+For the connected receiving-to-shipping journey, follow the [written walkthrough](docs/guides/implementer-guide.md#first-inbound-and-outbound-flow).
 
 ## Why Karyo exists
 
