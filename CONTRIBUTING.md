@@ -18,9 +18,9 @@ fork under the terms of that licence.
 ## Issues are welcome
 
 Open an issue for a reproducible bug, an incorrect or missing document, or a feature request.
-A useful bug report carries the Karyo version, how the stack was deployed, the exact request or
-screen involved, what you expected, what happened instead, and the relevant application log
-lines with any credentials removed.
+[The issue forms](https://github.com/voyagerforge-dev/karyo/issues/new/choose) ask for
+everything a report needs, including the reporting hygiene you have to confirm before you
+submit. Answer the fields the form presents rather than a checklist repeated in prose.
 
 A feature request is most useful when it describes the warehouse operation you need to perform
 and why the current behaviour blocks it, rather than a proposed implementation. Karyo's domain

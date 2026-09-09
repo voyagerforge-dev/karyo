@@ -21,7 +21,7 @@ section says otherwise.
 | Tool | Required version | Used for |
 |---|---:|---|
 | JDK, including `javac` | 21 | Backend compilation and tests |
-| Node.js and npm | Node.js 22 | Web and floor-PWA builds |
+| Node.js and npm | see [DEPLOY](../../DEPLOY.md#prerequisites) | Web and floor-PWA builds |
 | Python | 3.x | Deployment configuration validation; the deploy script aborts without it |
 | Docker with Compose, or Podman with `podman-compose` | Current stable release | Dev Services, integration tests, and deployment |
 | Git | 2.x or newer | Source control |

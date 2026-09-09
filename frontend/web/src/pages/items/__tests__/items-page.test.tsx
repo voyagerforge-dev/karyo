@@ -104,6 +104,32 @@ describe('ItemsPage', () => {
     expect(screen.queryByRole('button', { name: 'Re-slot flagged' })).not.toBeInTheDocument();
   });
 
+  // The end-user guide (docs/user-guide/desktop-console.md) tells a planner that
+  // Items is one of the three screens that opens on the first row rather than an
+  // empty "Select a ..." pane, so the fallback selection is documented behavior.
+  it('opens on the first listed item with no click, rather than an empty detail pane', () => {
+    const second: ProductResponse = { ...mockProducts[0], id: 2, number: 'SKU-002', name: 'Widget B' };
+    vi.mocked(useProducts).mockReturnValue({
+      data: {
+        content: [mockProducts[0], second],
+        page: { number: 0, size: 20, totalElements: 2, totalPages: 1 },
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+    } as ReturnType<typeof useProducts>);
+
+    render(
+      <MemoryRouter>
+        <ItemsPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByText('Select an item to view details')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Widget A' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 1, name: 'Widget B' })).not.toBeInTheDocument();
+  });
+
   // ⌘K "Create product" deep-link (Task 6): /items?create=1 on a fresh mount
   // must open the create form (formProduct initializer reads the param).
   // The sheet's title text ("New item") collides with the always-present

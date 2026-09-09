@@ -157,4 +157,44 @@ class StockSelectionExcludeTest {
         assertThat(response.fullyFulfilled).isTrue()
         assertThat(response.stocks.map { it.stockUnitId }).contains(stockId)
     }
+
+    /**
+     * The end-user guide (`docs/user-guide/find-stock.md`) tells a planner that a **Hold** pill
+     * is a flag on the row, not a verdict on the stock: one locked pallet turns the whole
+     * item-and-location row red, but the unlocked remainder of that row still reserves and picks
+     * normally, and only the locked amount is passed over. Both unit loads below sit on the same
+     * storage location, so they are one row on the Inventory screen.
+     */
+    @Test
+    @TestSecurity(user = "op", roles = ["inventory-read", "inventory-write"])
+    @OidcSecurity(
+        claims = [
+            Claim(key = "client_id", value = "1"),
+            Claim(key = "tenant_code", value = "ACME"),
+        ],
+    )
+    fun `a part-locked row still reserves its unlocked remainder, and only that remainder`() {
+        val itemDataId = 9200L + (System.nanoTime() % 100_000)
+        val lockedUl = createUnitLoad("UL-HELD-${System.nanoTime()}")
+        createStock(lockedUl, itemDataId, 60.0)
+        val freeStockId = createStock(createUnitLoad("UL-FREE-${System.nanoTime()}"), itemDataId, 40.0)
+        tenantContext.clientId = 1L
+
+        given().contentType(ContentType.JSON).body("""{"lockType":1}""")
+            .`when`().post("/api/v1/unit-loads/$lockedUl/lock")
+            .then().statusCode(200)
+
+        // Within the free 40: reserved in full, from the unlocked pallet alone.
+        val within = stockReserver.reserve(ReservationRequest(itemDataId = itemDataId, amount = BigDecimal(30)))
+        assertThat(within.shortfall).isEqualByComparingTo(BigDecimal.ZERO)
+        assertThat(within.reservations.map { it.stockUnitId }).containsExactly(freeStockId)
+        assertThat(within.reservations.first().amount).isEqualByComparingTo(BigDecimal(30))
+
+        // Beyond it: the remaining 10 free units are taken and the held 60 are passed over,
+        // leaving a shortfall rather than quietly allocating locked stock.
+        val beyond = stockReserver.reserve(ReservationRequest(itemDataId = itemDataId, amount = BigDecimal(50)))
+        assertThat(beyond.reservations.map { it.stockUnitId }).containsExactly(freeStockId)
+        assertThat(beyond.reservations.first().amount).isEqualByComparingTo(BigDecimal(10))
+        assertThat(beyond.shortfall).isEqualByComparingTo(BigDecimal(40))
+    }
 }

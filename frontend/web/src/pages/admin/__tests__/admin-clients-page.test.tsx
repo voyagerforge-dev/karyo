@@ -65,6 +65,28 @@ describe('AdminClientsPage', () => {
     expect(screen.getAllByText('Inactive').length).toBeGreaterThan(0);
   });
 
+  // docs/user-guide/administer-karyo.md describes this screen as searched, not
+  // filtered: read-only Active/Inactive count tiles, a per-row state pill, one
+  // search box over name and number, and an empty detail pane until a row is
+  // clicked. Each of those claims is asserted here so a future filter-chip row
+  // (or an auto-selected first client) fails rather than silently contradicting
+  // the guide.
+  it('narrows by search only - count tiles and row pills, no state chips, empty detail until clicked', async () => {
+    renderPage();
+
+    expect(screen.getByText('Select a client to view its details.')).toBeInTheDocument();
+    expect(screen.getByText('Total clients').nextElementSibling).toHaveTextContent('3');
+    expect(screen.getByText('Active', { selector: 'div' }).nextElementSibling).toHaveTextContent('2');
+    expect(screen.getByText('Inactive', { selector: 'div' }).nextElementSibling).toHaveTextContent('1');
+    expect(screen.queryByRole('button', { name: /^(all|active|inactive|system)$/i })).not.toBeInTheDocument();
+
+    const search = screen.getByPlaceholderText(/search clients/i);
+    await userEvent.type(search, 'CL-002');
+    expect(screen.getByText('GLOBEX')).toBeInTheDocument();
+    expect(screen.queryByText('ACME')).not.toBeInTheDocument();
+    expect(screen.queryByText('SYS')).not.toBeInTheDocument();
+  });
+
   it('creates a client', async () => {
     renderPage();
     await userEvent.click(screen.getByRole('button', { name: /new client/i }));

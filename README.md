@@ -1,5 +1,9 @@
 # Karyo WMS
 
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/tag/voyagerforge-dev/karyo?sort=semver&label=release)](https://github.com/voyagerforge-dev/karyo/releases)
+[![CI](https://github.com/voyagerforge-dev/karyo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/voyagerforge-dev/karyo/actions/workflows/ci.yml)
+
 **Know what arrived, where it is, and what needs to ship.**
 
 Karyo is a self-hosted warehouse management system for warehouse teams and the developers who
@@ -10,6 +14,31 @@ shipping, through a desktop console and a mobile progressive web app (PWA).
 ![Karyo inventory walkthrough: find a synthetic product, inspect its stock and location, then return to the inventory list.](docs/media/inventory-walkthrough.gif)
 
 For the connected receiving-to-shipping journey, follow the [written walkthrough](docs/guides/implementer-guide.md#first-inbound-and-outbound-flow).
+
+## Is Karyo a fit for your warehouse?
+
+**Karyo runs a physical warehouse.** Goods arrive against an advance shipping notice or blind,
+are received and put away into locations, sit as counted stock you can hold or release,
+get allocated and picked against delivery orders, then packed and shipped. Operators work
+from a scanner-driven floor app; planners and administrators work from a desktop console.
+Replenishment, stocktaking, work allocation, reporting, webhooks and a document archive are
+included. The [user guide](docs/user-guide/README.md) shows each of these as a task, screen
+by screen.
+
+**It suits** a team that wants a self-hosted WMS it can read, run and extend, and that has
+someone willing to configure it for their warehouse and verify it before real stock moves.
+
+**It is not** an unconfigured drop-in replacement for every operation. Shipping uses a built-in
+manual carrier adapter, so a real carrier or ERP connection is an extension you write against
+the published interfaces rather than something that arrives working. There is no yard or labour
+management, and no hosted service: you run it. Karyo has one instance per operating company,
+with goods owners inside it, rather than one shared instance serving many companies.
+
+**Open core, with an explicit boundary:** all Karyo source here, including public extension APIs,
+is [Apache-2.0](LICENSE). Nine optional commercial engines are not included. Ordinary document
+generation and one-to-one pack-out remain free. [Commercial engines](PAID-MODULES.md) owns the
+capability list, prerequisites, limitations and contact route. Confirm commercial delivery
+availability there before relying on it; a licence token cannot install absent engine code.
 
 ## Why Karyo exists
 
@@ -48,24 +77,14 @@ need, rather than a hypothetical future one. In Karyo today:
 See the [current architecture](https://github.com/voyagerforge-dev/karyo/wiki/Technical-Architecture-Overview)
 and [extension contracts](docs/architecture/extensibility-architecture.md) for details and limits.
 
-## What you can do
-
-The free application includes products and warehouse layout, receiving and quality holds,
-inventory and putaway, delivery orders, discrete picking, packing/shipping, replenishment,
-stocktaking, work allocation, goods-owner/user administration, reporting, webhooks and a document
-archive. It suits teams evaluating a self-hosted WMS and implementers willing to configure and
-verify it for their warehouse, not an unconfigured drop-in replacement for every operation.
-
-**Open core, with an explicit boundary:** all Karyo source here, including public extension APIs,
-is [Apache-2.0](LICENSE). Nine optional commercial engines are not included. Ordinary document
-generation and one-to-one pack-out remain free. [Commercial engines](PAID-MODULES.md) owns the
-capability list, prerequisites, limitations and contact route. Confirm commercial delivery
-availability there before relying on it; a licence token cannot install absent engine code.
-
 ## Get started
 
-To build the backend from source, install a **JDK 21 compiler**, set `JAVA_HOME`, and use the
-checked-in wrapper:
+**Using a Karyo someone already installed for you?** Go straight to the
+[user guide](docs/user-guide/README.md); it starts with your first sign-in and which of the two
+interfaces you should be on.
+
+**Installing it?** To build the backend from source, install a **JDK 21 compiler**, set
+`JAVA_HOME`, and use the checked-in wrapper:
 
 ```bash
 git clone https://github.com/voyagerforge-dev/karyo.git
@@ -86,18 +105,21 @@ Node.js 22.12+, Python 3, and Docker with Compose or Podman with podman-compose:
 
 ## Documentation
 
+- [User guide](docs/user-guide/README.md): running the warehouse day to day, by task
 - [Product and workflow wiki](https://github.com/voyagerforge-dev/karyo/wiki)
 - [Requirements register](docs/REQUIREMENTS.md)
 - [Stock selection](docs/functional/stock-selection.md), [location finding](docs/functional/location-finder.md)
   and [picking](docs/functional/picking.md)
 - [API standards](docs/architecture/api-standards.md) and [webhook event catalog](docs/integration/webhook-event-catalog.md)
 - [Operations, backups and upgrades](DEPLOY.md)
+- [Changelog](CHANGELOG.md): what changed in each release
 
 ## Help, issues and contributions
 
 [Issues](https://github.com/voyagerforge-dev/karyo/issues) are welcome for reproducible bugs,
 documentation problems and feature requests. Describe the warehouse problem and include sanitized
-reproduction steps. See [CONTRIBUTING](CONTRIBUTING.md) for the reporting and extension routes.
+reproduction steps. See [CONTRIBUTING](CONTRIBUTING.md) for the reporting and extension routes,
+and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for how we expect people to treat each other here.
 **External pull requests are not accepted:** this is a generated distribution. The first release
 has one root commit; each later release adds one generated commit and matching tag without
 rewriting earlier history. Forks and independent changes are permitted under Apache-2.0.

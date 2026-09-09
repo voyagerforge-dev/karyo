@@ -1,0 +1,18 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/voyagerforge-dev/karyo/blob/main/SECURITY.md
+    about: >-
+      Never open a public issue for a suspected vulnerability. The security policy
+      gives the private reporting route and what to include.
+  - name: Ask about a commercial engine
+    url: https://github.com/voyagerforge-dev/karyo/blob/main/PAID-MODULES.md
+    about: >-
+      The nine optional commercial engines are not part of this repository. That page
+      records what each one does, its limits, and the contact route.
+  - name: Read the contribution boundary before opening a pull request
+    url: https://github.com/voyagerforge-dev/karyo/blob/main/CONTRIBUTING.md
+    about: >-
+      External pull requests are not accepted: this tree is regenerated from a private
+      working repository on every release, so a change made here would be overwritten.
+      Open an issue instead, or fork under Apache-2.0.

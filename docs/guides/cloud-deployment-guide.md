@@ -82,11 +82,14 @@ docker compose version
 
 ---
 
-## 5. Install JDK 21, Node.js 22, and Python 3
+## 5. Install JDK 21, Node.js, and Python 3
 
 The deploy script builds the application from source and validates the deployment's public URLs,
-so JDK 21, Node.js 22, and Python 3 are all required. Ubuntu ships Python 3; install it explicitly
-on a minimal image.
+so a JDK, Node.js and Python 3 are all required.
+[DEPLOY.md](../../DEPLOY.md#prerequisites) owns the exact minimum versions, including why the
+Node floor is higher than the deploy script's own check enforces; read it before installing
+rather than trusting a distro default. Ubuntu ships Python 3; install it explicitly on a minimal
+image.
 
 ```bash
 sudo apt-get install -y openjdk-21-jdk-headless python3
@@ -94,15 +97,15 @@ curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
-Verify:
+Verify the installed versions against DEPLOY's prerequisites:
 
 ```bash
-java -version     # Should show 21.x
-node --version    # Should show 22.x
-python3 --version # Should show 3.x
+java -version
+node --version
+python3 --version
 ```
 
-> **ARM64 note:** Both OpenJDK 21 and Node.js 22 have native aarch64 packages. No emulation overhead.
+> **ARM64 note:** Both OpenJDK 21 and Node.js have native aarch64 packages. No emulation overhead.
 
 ---
 

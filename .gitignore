@@ -76,3 +76,10 @@ distribution/.venv/
 distribution/config/
 distribution/catalog.json
 distribution/.env
+
+# Publication test scratch. Each suite builds its candidate tree in a temporary directory at
+# the repository root; an interrupted or failing run leaves one behind, where `git add -A`
+# stages it and the publication gate then refuses the whole tree as an unclassified path.
+.proof-test-*/
+.public-front-doors-*/
+.wiki-route-test-*/

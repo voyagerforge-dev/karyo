@@ -1,0 +1,86 @@
+name: Bug report
+description: Karyo did something wrong, and you can describe how to reproduce it.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Do not report a suspected security vulnerability here. Use the private route in
+        SECURITY.md instead. Remove credentials, licence tokens and customer records from
+        anything you paste below.
+  - type: input
+    id: version
+    attributes:
+      label: Karyo version
+      description: The release tag you are running, such as v2.0.1.
+      placeholder: v2.0.1
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where did it happen
+      options:
+        - Desktop console
+        - Floor progressive web app
+        - Backend API
+        - Build, deployment or start-up
+        - Documentation or wiki
+    validations:
+      required: true
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: How is the stack deployed
+      options:
+        - Compose with Docker
+        - Compose with Podman
+        - Local development mode
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: >-
+        The exact screen, request or command, and the warehouse data it acted on.
+        Synthetic data is fine and preferred.
+      placeholder: |
+        1. Sign in as a user holding OPERATOR.
+        2. Open Fulfillment > Tasks and filter to Pick.
+        3. Claim task PICK:1042.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead
+      description: Include the error banner, the HTTP status, or the failing behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant application log lines
+      description: >-
+        Paste the lines around the failure. This is rendered as a code block, so no
+        backticks are needed.
+      render: text
+    validations:
+      required: false
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Before you submit
+      options:
+        - label: This is not a security vulnerability report.
+          required: true
+        - label: I removed credentials, licence tokens and customer data from this report.
+          required: true

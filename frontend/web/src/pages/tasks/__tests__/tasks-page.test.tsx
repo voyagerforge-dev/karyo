@@ -304,6 +304,16 @@ describe('TasksPage', () => {
     expect(within(screen.getByTestId('work-row-COUNT:3')).getByText('Count')).toBeInTheDocument();
   });
 
+  // The end-user guide (docs/user-guide/desktop-console.md) tells a supervisor that
+  // Tasks is one of the screens that waits for a click, so an empty right-hand pane
+  // means "nothing selected yet", not "the list failed to load".
+  it('starts with the empty "Select a work item" pane, with rows already listed', () => {
+    renderPage();
+
+    expect(screen.getByText('Select a work item')).toBeInTheDocument();
+    expect(screen.getByTestId('work-row-PICK:7')).toBeInTheDocument();
+  });
+
   it('?type=PICK deep link preselects the chip and filters', () => {
     renderPage(['/tasks?type=PICK']);
 

@@ -1,6 +1,6 @@
 # Karyo WMS - Observability Architecture
 
-> **Project:** Karyo WMS (codename: Project Syzygy)
+> **Project:** Karyo WMS
 > **Version:** 2.0
 > **Reviewed:** 2026-09-08
 > **Status:** Current mechanism/limitation reference; configuration is not proof of emitted data

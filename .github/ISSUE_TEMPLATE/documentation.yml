@@ -1,0 +1,35 @@
+name: Documentation problem
+description: A document or wiki page is wrong, missing, unclear or out of date.
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Documentation defects are treated as product defects. Inaccurate guidance about
+        warehouse behaviour is worth reporting even when the software is correct.
+  - type: input
+    id: location
+    attributes:
+      label: Which document or wiki page
+      description: The repository path or the wiki page name.
+      placeholder: docs/user-guide/pick-an-order.md
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong
+      description: >-
+        Quote the sentence or section. Say whether it is inaccurate, missing, ambiguous,
+        or describes behaviour that has since changed.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What it should say
+      description: >-
+        If you have verified the real behaviour, say how you verified it. That evidence is
+        what makes a documentation report actionable.
+    validations:
+      required: false

@@ -1,0 +1,42 @@
+name: Feature request
+description: Karyo cannot perform a warehouse operation you need.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Describe the warehouse operation and why the current behaviour blocks it, rather
+        than a proposed implementation. Karyo's domain behaviour is specified under
+        docs/functional/; if your request contradicts a specified behaviour, say so.
+  - type: textarea
+    id: operation
+    attributes:
+      label: The warehouse operation you need to perform
+      description: Who does it, when in the day, and what the goods and paperwork look like.
+    validations:
+      required: true
+  - type: textarea
+    id: blocked
+    attributes:
+      label: How current behaviour blocks it
+      description: >-
+        What you tried in Karyo today and where it stopped. Name the screen, the API, or
+        the configuration you expected to cover it.
+    validations:
+      required: true
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Your current workaround
+      description: What the warehouse does instead today, and what that costs.
+    validations:
+      required: false
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Before you submit
+      options:
+        - label: >-
+            I checked PAID-MODULES.md and this is not asking for one of the nine commercial
+            engines to be reimplemented as free code.
+          required: true

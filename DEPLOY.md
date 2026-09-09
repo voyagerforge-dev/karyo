@@ -7,14 +7,17 @@ Covers local and cloud deployment of the full Karyo WMS stack using Docker (reco
 Install the following before deploying:
 
 - **Java 21+** (JDK, not JRE) -- `javac` must be available
-- **Node.js 22+** -- required for the frontend build (`frontend/web/package.json` declares
-  `engines.node >= 22` because `@pact-foundation/pact` does, and the nginx image's desktop and
-  floor-PWA builder stages both pin Node 22 to match) and for
-  `--validate-env`, which uses Node's WHATWG URL parser to validate public origins. The deploy
-  script rejects an older major in stage 1, before the host `npm ci`, because npm only warns on
-  an engine mismatch. The end-to-end wrapper `scripts/run-e2e.sh` additionally requires
-  **Node 22.6+** for the `--experimental-strip-types` target resolver, and checks that before
-  it uses it
+- **Node.js 22.12+** -- required for the frontend build and for `--validate-env`, which uses
+  Node's WHATWG URL parser to validate public origins. 22.12 is the real floor because Vite 7
+  and `@vitejs/plugin-react` declare `engines.node ^20.19.0 || >=22.12.0`. Nothing enforces that
+  exact minimum: `frontend/web/package.json` still declares only `engines.node >= 22` (it was
+  written for `@pact-foundation/pact`), and the deploy script's stage-1 check likewise rejects
+  only an older *major*, before the host `npm ci`, because npm only warns on an engine mismatch.
+  A 22.x below 22.12 therefore passes both and then fails inside the Vite build, so install
+  22.12 or newer rather than relying on the checks. The nginx image's desktop and floor-PWA
+  builder stages use `node:22-alpine`, which resolves above the floor. The end-to-end wrapper
+  `scripts/run-e2e.sh` runs its own check for **Node 22.6+**, which it needs for the
+  `--experimental-strip-types` target resolver
 - **Python 3** -- required for deployment configuration validation
 - **Docker** (with compose plugin, recommended) OR **Podman** + `podman-compose` (fallback)
 - **cloudflared** -- Cloudflare Tunnel client for public HTTPS access
@@ -762,7 +765,7 @@ To expose the local deployment over HTTPS without opening firewall ports, config
 ### Setup
 
 1. Create a VM (e.g., Oracle Cloud A1.Flex with 4 OCPU / 24GB RAM)
-2. Install Docker with the compose plugin, Java 21, Node.js 22+, Git, and cloudflared
+2. Install Docker with the compose plugin, Java 21, Node.js 22.12+, Git, and cloudflared
 3. Clone the repository and create `scripts/.env.prod`
 4. Uncomment resource limit variables in `.env.prod` for larger allocations:
    ```

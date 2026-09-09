@@ -41,8 +41,9 @@ is not promised without a separately documented and tested compatibility path.
 
 ## Install and establish access
 
-1. Install a **JDK 21 compiler**, Node.js 22.12+ and Docker with Compose or Podman with podman-compose.
-   Use the checked-in wrapper. Set `JAVA_HOME` to a JDK, not a JRE.
+1. Install a **JDK 21 compiler**, Node.js and Docker with Compose or Podman with podman-compose.
+   [DEPLOY's prerequisites](../../DEPLOY.md#prerequisites) own the exact minimum versions and what
+   each is needed for. Use the checked-in wrapper. Set `JAVA_HOME` to a JDK, not a JRE.
 2. Follow [DEPLOY](../../DEPLOY.md) for the supported environment file, exact public origin,
    HTTPS, four-container build, service secrets and bootstrap procedure. Ordinary clone files
    must remain readable by bind-mounted containers; use `umask 022` for source/build inputs.
